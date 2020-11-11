@@ -1,1 +1,8 @@
 @import "~antd/dist/antd.css";
+.ant-tabs-nav {
+    margin: 0 !important;
+}
+.input_search {
+    width: 500px;
+    margin-left: 20px;
+}
