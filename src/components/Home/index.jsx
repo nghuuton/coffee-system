@@ -1,116 +1,65 @@
-import { Button, Col, Layout, Row } from "antd";
+import { Button } from "antd";
 import React, { Component } from "react";
-import TabsHoaDon from "../Tabs";
+import { connect } from "react-redux";
+import { addNewTab } from "../../actions/tabActions";
 import axios from "axios";
-
-const { Content } = Layout;
-
-const initialPanes = [];
+import TableRadio from "../Table";
 
 class Home extends Component {
-    state = {};
-    newTabIndex = 0;
-
-    state = { panes: initialPanes };
-
-    onChange = (activeKey) => {
-        this.setState({ activeKey });
-    };
-
-    onEdit = (targetKey, action) => {
-        this[action](targetKey);
-    };
-
     add = async (name) => {
-        const { panes } = this.state;
+        const { panes } = this.props.tabs;
         const newPanes = [...panes];
-
         const panesExist = newPanes.find((item) => item.title === name);
-
         if (panesExist) {
             return;
         }
-        const activeKey = `${this.newTabIndex++}`;
+        const { data } = await axios.get(`https://jsonplaceholder.typicode.com/todos/1`);
 
-        const { data } = await axios.get(
-            `https://jsonplaceholder.typicode.com/todos/${Number(activeKey) + 1}`
-        );
-
-        newPanes.push({
-            title: `${name}`,
-            content: `${data.title}`,
-            key: activeKey,
-        });
-        this.setState({
-            panes: newPanes,
-            activeKey,
-        });
-    };
-
-    remove = (targetKey) => {
-        const { panes, activeKey } = this.state;
-        let newActiveKey = activeKey;
-        let lastIndex;
-
-        panes.forEach((pane, i) => {
-            if (pane.key === targetKey) {
-                lastIndex = i - 1;
-            }
-        });
-        const newPanes = panes.filter((pane) => pane.key !== targetKey);
-
-        if (newPanes.length && newActiveKey === targetKey) {
-            if (lastIndex >= 0) {
-                newActiveKey = newPanes[lastIndex].key;
-            } else {
-                newActiveKey = newPanes[0].key;
-            }
-        }
-
-        this.setState({
-            panes: newPanes,
-            activeKey: newActiveKey,
-        });
+        this.props.dispatch(addNewTab(name, data));
     };
 
     render() {
         return (
-            <Layout>
-                <Content>
-                    <Row gutter={24}>
-                        <Col span={14}>
-                            <div>
-                                <Button style={{ margin: "5px" }}>Tất cả</Button>
-                                <Button style={{ margin: "5px" }}>Bàn trống</Button>
-                                <Button style={{ margin: "5px" }}>Đã thanh toán</Button>
-                                <Button style={{ margin: "5px" }}>Chưa thanh toán</Button>
-                            </div>
-                            <div>
-                                <div style={{ marginBottom: 16 }}>
-                                    <Button onClick={() => this.add("Bàn 1")}>
-                                        Bàn 1
-                                    </Button>
-                                    <Button onClick={() => this.add("Bàn 2")}>
-                                        Bàn 2
-                                    </Button>
-                                    <Button onClick={() => this.add("Bàn 3")}>
-                                        Bàn 3
-                                    </Button>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col span={10} style={{ minHeight: 500 }}>
-                            <TabsHoaDon
-                                panes={this.state.panes}
-                                onChange={this.onChange}
-                                onEdit={this.onEdit}
-                            />
-                        </Col>
-                    </Row>
-                </Content>
-            </Layout>
+            <>
+                <div>
+                    <Button style={{ margin: "5px" }}>Tất cả</Button>
+                    <Button style={{ margin: "5px" }}>Bàn trống</Button>
+                    <Button style={{ margin: "5px" }}>Đã thanh toán</Button>
+                    <Button style={{ margin: "5px" }}>Chưa thanh toán</Button>
+                </div>
+                <div>
+                    <div
+                        style={{
+                            marginBottom: 16,
+                            display: "flex",
+                            flexFlow: "row",
+                            flexWrap: "wrap",
+                            width: 1000,
+                        }}
+                    >
+                        <TableRadio name={"Bàn 1"} onClick={() => this.add("Bàn 1")} />
+                        <TableRadio name={"Bàn 2"} onClick={() => this.add("Bàn 2")} />
+                        <TableRadio name={"Bàn 3"} onClick={() => this.add("Bàn 3")} />
+                        <TableRadio name={"Bàn 4"} onClick={() => this.add("Bàn 4")} />
+                        <TableRadio name={"Bàn 5"} onClick={() => this.add("Bàn 5")} />
+                        <TableRadio name={"Bàn 6"} onClick={() => this.add("Bàn 6")} />
+                        <TableRadio name={"Bàn 7"} onClick={() => this.add("Bàn 7")} />
+                        <TableRadio name={"Bàn 8"} onClick={() => this.add("Bàn 8")} />
+                        <TableRadio name={"Bàn 9"} onClick={() => this.add("Bàn 9")} />
+                        <TableRadio name={"Bàn 10"} onClick={() => this.add("Bàn 10")} />
+                        <TableRadio name={"Bàn 11"} onClick={() => this.add("Bàn 11")} />
+                        <TableRadio name={"Bàn 12"} onClick={() => this.add("Bàn 12")} />
+                    </div>
+                </div>
+            </>
         );
     }
 }
 
-export default Home;
+function mapStateToProps(state) {
+    return {
+        tabs: state.tabs,
+    };
+}
+
+export default connect(mapStateToProps)(Home);
