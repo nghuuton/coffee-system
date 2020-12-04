@@ -7,7 +7,7 @@ const { Header } = Layout;
 
 const HeaderSystem = () => {
     return (
-        <Header>
+        <Header className="header">
             <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]}>
                 <Menu.Item key="1">
                     <Link to="/">
@@ -21,12 +21,12 @@ const HeaderSystem = () => {
                         Thực Đơn
                     </Link>
                 </Menu.Item>
-                <Input
-                    placeholder="Tìm kiếm sản phẩm"
-                    onChange={(e) => console.log(e.target.value)}
-                    className="input_search"
-                />
             </Menu>
+            <Input
+                placeholder="Tìm kiếm sản phẩm"
+                onChange={(e) => console.log(e.target.value)}
+                className="input_search"
+            />
         </Header>
     );
 };

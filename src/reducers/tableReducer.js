@@ -4,7 +4,7 @@ import { GET_LIST_TABLE } from "../actions/types";
 export default function (state = {}, action) {
     switch (action.type) {
         case GET_LIST_TABLE:
-            return { ...state };
+            return { ...state, listTable: [...action.payload] };
 
         default:
             return state;

@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 
 import { Card, Tabs } from "antd";
-import { removeTab } from "../../actions/tabActions";
+import { changeTab, removeTab } from "../../actions/tabActions";
 import { connect } from "react-redux";
+import ItemTab from "../Item_Tab";
 const { TabPane } = Tabs;
 
 class TabsHoaDon extends Component {
     onChange = (activeKey) => {
-        this.setState({ activeKey });
+        this.props.dispatch(changeTab(activeKey));
     };
 
     onEdit = (targetKey, action) => {
@@ -15,34 +16,62 @@ class TabsHoaDon extends Component {
     };
 
     remove = (targetKey) => {
-        const { panes } = this.props.tabs;
-        const newPanes = panes.filter((pane) => pane.title !== targetKey);
+        const { panes, activeKey } = this.props.tabs;
+        let newActiveKey = activeKey;
+        let lastIndex;
+
+        panes.forEach((pane, i) => {
+            if (pane.table._id === targetKey) {
+                lastIndex = i - 1;
+            }
+        });
+
+        const newPanes = panes.filter((pane) => pane.table._id !== targetKey);
+
+        if (newPanes.length && newActiveKey === targetKey) {
+            if (lastIndex >= 0) {
+                newActiveKey = newPanes[lastIndex].table._id;
+            } else {
+                newActiveKey = newPanes[0].table._id;
+            }
+        }
+
         this.props.dispatch(removeTab(newPanes));
+        this.props.dispatch(changeTab(newActiveKey));
     };
     render() {
-        const { panes } = this.props.tabs;
+        const { panes, activeKey } = this.props.tabs;
         return (
             <Tabs
                 type="editable-card"
                 onChange={this.onChange}
                 onEdit={this.onEdit}
+                activeKey={activeKey}
                 hideAdd
             >
                 {panes.length > 0 &&
                     panes.map((pane) => (
                         <TabPane
                             tab={pane.title}
-                            key={pane.title}
+                            key={pane.table._id}
                             closable={pane.closable}
                         >
                             <Card
+                                className="content_tab"
                                 bordered={false}
                                 style={{
                                     width: "100%",
-                                    height: 500,
+                                    height: 750,
                                 }}
                             >
-                                {pane.content}
+                                <div className="tab_content">
+                                    <ItemTab />
+                                    <ItemTab />
+                                    <ItemTab />
+                                    <ItemTab />
+                                    <ItemTab />
+                                    <ItemTab />
+                                </div>
                             </Card>
                         </TabPane>
                     ))}

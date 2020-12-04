@@ -2,7 +2,15 @@
 .ant-tabs-nav {
     margin: 0 !important;
 }
+
+.header {
+    position: relative;
+}
+
 .input_search {
+    position: absolute;
+    top: 15px;
+    left: 250px;
     width: 500px;
     margin-left: 20px;
 }
@@ -16,7 +24,7 @@
     height: 130px;
     font-size: small;
     text-align: center;
-    border: 1px solid #000;
+    border: 1px solid #9fb7b9;
     border-radius: 10px;
     position: relative;
 }
@@ -56,3 +64,103 @@
     border-radius: 10px;
     position: relative;
 } */
+
+.btn_filter_group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.btn_filter_group > button {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.list_tables {
+    margin-bottom: 16px;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    height: 700px;
+}
+
+.wrapper .pagination {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+}
+
+.tab_content {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+    height: 500px;
+    border: 1px solid #9fb7b9;
+    border-radius: 5px;
+    overflow-y: scroll;
+}
+
+.tab_content .tab_content__item {
+    display: flex;
+    height: 100px;
+    align-items: center;
+}
+
+.tab_content .tab_content__item .tab_content__item_btn_delete {
+    cursor: pointer;
+    width: 30px;
+    border: 1px solid #9fb7b9;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 0 10px;
+}
+
+.tab_content .tab_content__item .tab__content__item__title {
+    width: 200px;
+}
+
+.tab_content .tab_content__item .tab__content__item__title span:nth-child(1) {
+    display: flex;
+    flex-flow: column wrap;
+    font-weight: 500;
+    font-size: larger;
+}
+
+.tab_content .tab_content__item .tab__content__item__title span:nth-child(2) {
+    position: relative;
+    font-weight: 300;
+    font-size: medium;
+}
+
+.tab_content .tab_content__item .tab__content__item__title span:nth-child(2) img {
+    cursor: pointer;
+    width: 16px;
+    position: absolute;
+    top: 1px;
+    right: -20px;
+}
+
+.tab_content .tab_content__item .tab__content__item__input {
+    width: 350px;
+    margin-left: 10px;
+    margin-right: 10px;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.tab_content .tab_content__item .tab__content__item__input .input_price {
+    width: 100px;
+    margin-right: 10px;
+}
+
+.tab_content .tab_content__item .tab__content__item__input .input_quantity {
+    width: 50px;
+    margin: 0 5px;
+}

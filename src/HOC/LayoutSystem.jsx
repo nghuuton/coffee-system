@@ -10,9 +10,9 @@ class LayoutSystem extends Component {
                 <HeaderSystem />
                 <Layout>
                     <Content>
-                        <Row gutter={24}>
-                            <Col span={14}>{this.props.children}</Col>
-                            <Col span={10} style={{ minHeight: 500 }}>
+                        <Row gutter={24} style={{ height: 790 }}>
+                            <Col span={12}>{this.props.children}</Col>
+                            <Col span={12} style={{ minHeight: 500 }}>
                                 <TabsHoaDon />
                             </Col>
                         </Row>

@@ -1,65 +1,70 @@
-import { Button } from "antd";
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { addNewTab } from "../../actions/tabActions";
-import axios from "axios";
+import { Button, Pagination } from "antd";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewTab, changeTab } from "../../actions/tabActions";
+import { getListTable } from "../../actions/tableActions";
 import TableRadio from "../Table";
 
-class Home extends Component {
-    add = async (name) => {
-        const { panes } = this.props.tabs;
+const Home = (props) => {
+    const dispatch = useDispatch();
+    const { listTable } = useSelector((state) => state.tables);
+    const { panes } = useSelector((state) => state.tabs);
+
+    const [byStatus, setByStatus] = useState("");
+
+    useEffect(() => {
+        dispatch(getListTable({ byStatus }));
+    }, [byStatus, dispatch]);
+
+    const add = async (table) => {
         const newPanes = [...panes];
-        const panesExist = newPanes.find((item) => item.title === name);
+        const panesExist = newPanes.find((item) => item.title === table.name);
         if (panesExist) {
+            dispatch(changeTab(table._id));
             return;
         }
-        const { data } = await axios.get(`https://jsonplaceholder.typicode.com/todos/1`);
-
-        this.props.dispatch(addNewTab(name, data));
+        dispatch(addNewTab(table.name, table));
+        dispatch(changeTab(table._id));
     };
 
-    render() {
-        return (
-            <>
-                <div>
-                    <Button style={{ margin: "5px" }}>Tất cả</Button>
-                    <Button style={{ margin: "5px" }}>Bàn trống</Button>
-                    <Button style={{ margin: "5px" }}>Đã thanh toán</Button>
-                    <Button style={{ margin: "5px" }}>Chưa thanh toán</Button>
-                </div>
-                <div>
-                    <div
-                        style={{
-                            marginBottom: 16,
-                            display: "flex",
-                            flexFlow: "row",
-                            flexWrap: "wrap",
-                            width: 1000,
-                        }}
-                    >
-                        <TableRadio name={"Bàn 1"} onClick={() => this.add("Bàn 1")} />
-                        <TableRadio name={"Bàn 2"} onClick={() => this.add("Bàn 2")} />
-                        <TableRadio name={"Bàn 3"} onClick={() => this.add("Bàn 3")} />
-                        <TableRadio name={"Bàn 4"} onClick={() => this.add("Bàn 4")} />
-                        <TableRadio name={"Bàn 5"} onClick={() => this.add("Bàn 5")} />
-                        <TableRadio name={"Bàn 6"} onClick={() => this.add("Bàn 6")} />
-                        <TableRadio name={"Bàn 7"} onClick={() => this.add("Bàn 7")} />
-                        <TableRadio name={"Bàn 8"} onClick={() => this.add("Bàn 8")} />
-                        <TableRadio name={"Bàn 9"} onClick={() => this.add("Bàn 9")} />
-                        <TableRadio name={"Bàn 10"} onClick={() => this.add("Bàn 10")} />
-                        <TableRadio name={"Bàn 11"} onClick={() => this.add("Bàn 11")} />
-                        <TableRadio name={"Bàn 12"} onClick={() => this.add("Bàn 12")} />
-                    </div>
-                </div>
-            </>
-        );
-    }
-}
-
-function mapStateToProps(state) {
-    return {
-        tabs: state.tabs,
+    const getAll = () => {
+        dispatch(getListTable());
+        setByStatus("");
     };
-}
 
-export default connect(mapStateToProps)(Home);
+    const changePage = (page) => {
+        console.log(page);
+    };
+
+    return (
+        <>
+            <div className="btn_filter_group">
+                <Button onClick={() => getAll()}>Tất cả</Button>
+                <Button onClick={() => setByStatus("Trống")}>Bàn trống</Button>
+                <Button>Đã thanh toán</Button>
+                <Button>Chưa thanh toán</Button>
+            </div>
+            <div className="wrapper">
+                <div className="list_tables">
+                    {listTable &&
+                        listTable.map((item) => (
+                            <TableRadio
+                                name={`${item.name}`}
+                                table={item}
+                                onClick={() => add(item)}
+                                key={item._id}
+                            />
+                        ))}
+                </div>
+                <Pagination
+                    defaultCurrent={1}
+                    total={listTable && listTable.length}
+                    className="pagination"
+                    pageSize={3}
+                />
+            </div>
+        </>
+    );
+};
+
+export default Home;
