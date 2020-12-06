@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewTab, changeTab } from "../../actions/tabActions";
 import { getListTable } from "../../actions/tableActions";
+import TableApi from "../../api/TableApi";
 import TableRadio from "../Table";
 
 const Home = (props) => {
@@ -20,10 +21,10 @@ const Home = (props) => {
         const newPanes = [...panes];
         const panesExist = newPanes.find((item) => item.title === table.name);
         if (panesExist) {
-            dispatch(changeTab(table._id));
-            return;
+            return dispatch(changeTab(table._id));
         }
-        dispatch(addNewTab(table.name, table));
+        const data = await TableApi.getInvoice({ _id: table._id });
+        dispatch(addNewTab(table.name, table, data));
         dispatch(changeTab(table._id));
     };
 

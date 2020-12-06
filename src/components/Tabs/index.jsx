@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Card, Tabs } from "antd";
 import { changeTab, removeTab } from "../../actions/tabActions";
 import { connect } from "react-redux";
-import ItemTab from "../Item_Tab";
+import TabContent from "../TabContent";
 const { TabPane } = Tabs;
 
 class TabsHoaDon extends Component {
@@ -39,6 +39,7 @@ class TabsHoaDon extends Component {
         this.props.dispatch(removeTab(newPanes));
         this.props.dispatch(changeTab(newActiveKey));
     };
+
     render() {
         const { panes, activeKey } = this.props.tabs;
         return (
@@ -64,14 +65,11 @@ class TabsHoaDon extends Component {
                                     height: 750,
                                 }}
                             >
-                                <div className="tab_content">
-                                    <ItemTab />
-                                    <ItemTab />
-                                    <ItemTab />
-                                    <ItemTab />
-                                    <ItemTab />
-                                    <ItemTab />
-                                </div>
+                                {pane && pane.content.length > 0 && (
+                                    <div className="tab_content">
+                                        <TabContent pane={pane} />
+                                    </div>
+                                )}
                             </Card>
                         </TabPane>
                     ))}
