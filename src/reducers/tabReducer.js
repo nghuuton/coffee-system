@@ -4,6 +4,7 @@ import {
     CHANGE_TAB_TABLE,
     DECREMENT_PRODUCT,
     DELETE_PRODUCT,
+    GET_INVOICE_NOT_PAYMENT,
     INCREMENT_PRODUCT,
     REMOVE_TAB,
 } from "../actions/types";
@@ -21,7 +22,9 @@ export default function (state = { panes: [] }, action) {
             const result = state.panes.find(
                 (item) => item.table._id === action.payload.activeKey
             );
-            const idx = state.panes.indexOf(result);
+            const idx = state.panes.findIndex(
+                (item) => item.table._id === action.payload.activeKey
+            );
             return {
                 ...state,
                 panes: [
@@ -30,7 +33,7 @@ export default function (state = { panes: [] }, action) {
                         ...result,
                         content: [
                             ...result.content,
-                            { ...action.payload.product, quantity: 1 },
+                            { ...action.payload.product, quantity: 1, note: "" },
                         ],
                     },
                     ...state.panes.slice(idx + 1),
@@ -98,6 +101,27 @@ export default function (state = { panes: [] }, action) {
                     ...state.panes.slice(idxPaneProduct + 1),
                 ],
             };
+        case GET_INVOICE_NOT_PAYMENT:
+            const { invoice, detailInvoice } = action.payload;
+            const newPanes = invoice.map((item, index) => {
+                return {
+                    title: item.ownerTable.name,
+                    content:
+                        item.detailInvoice._id === detailInvoice[index]._id
+                            ? detailInvoice[index].product.map((item) => {
+                                  return {
+                                      quantity: item.quantity,
+                                      ...item._id,
+                                      note: "",
+                                  };
+                              })
+                            : [],
+                    table: item.ownerTable,
+                    totalPayment: detailInvoice[index].totalPayment,
+                    intoMoney: detailInvoice[index].intoMoney,
+                };
+            });
+            return { ...state, panes: newPanes, activeKey: newPanes[0].table._id };
 
         default:
             return state;

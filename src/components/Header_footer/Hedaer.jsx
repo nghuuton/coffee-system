@@ -10,13 +10,13 @@ const HeaderSystem = () => {
         <Header className="header">
             <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]}>
                 <Menu.Item key="1">
-                    <Link to="/">
+                    <Link to="/coffee">
                         <UngroupOutlined />
                         Bàn
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="2">
-                    <Link to="/menu">
+                    <Link to="/coffee/menu">
                         <CoffeeOutlined />
                         Thực Đơn
                     </Link>

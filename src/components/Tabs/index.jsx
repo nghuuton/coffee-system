@@ -1,9 +1,9 @@
+import { Button, Card, Tabs } from "antd";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { changeTab, removeTab } from "../../actions/tabActions";
-
-import { Card, Tabs } from "antd";
 import TabContent from "../TabContent";
+
 const { TabPane } = Tabs;
 
 class TabsHoaDon extends Component {
@@ -56,6 +56,24 @@ class TabsHoaDon extends Component {
                                         <TabContent pane={pane} />
                                     </div>
                                 )}
+                                <div className="btn_group">
+                                    <div className="tool_bill">
+                                        <Button className="btn_notification">
+                                            Thông Báo Bếp
+                                        </Button>
+                                        <Button className="btn_group_bill">
+                                            Ghép Hoá Đơn
+                                        </Button>
+                                    </div>
+                                    <div className="tool_bill">
+                                        <Button className="btn_group_table">
+                                            Ghép Bàn
+                                        </Button>
+                                        <Button className="btn_payment">
+                                            Yêu Cầu Thanh Toán
+                                        </Button>
+                                    </div>
+                                </div>
                             </Card>
                         </TabPane>
                     ))}

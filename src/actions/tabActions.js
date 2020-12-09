@@ -1,10 +1,11 @@
-import TableApi from "../api/TableApi";
+import InvoiceApi from "../api/InvoiceApi";
 import {
     ADD_NEW_TAB,
     ADD_PRODUCT,
     CHANGE_TAB_TABLE,
     DECREMENT_PRODUCT,
     DELETE_PRODUCT,
+    GET_INVOICE_NOT_PAYMENT,
     INCREMENT_PRODUCT,
     REMOVE_TAB,
 } from "./types";
@@ -86,5 +87,13 @@ export function changeTab(_id) {
     return {
         type: CHANGE_TAB_TABLE,
         payload: _id,
+    };
+}
+
+export function getInvoice() {
+    const request = InvoiceApi.getInvoiceNotPayment();
+    return {
+        type: GET_INVOICE_NOT_PAYMENT,
+        payload: request,
     };
 }

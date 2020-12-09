@@ -1,7 +1,7 @@
 import { Button, Pagination } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewTab, changeTab } from "../../actions/tabActions";
+import { addNewTab, changeTab, getInvoice } from "../../actions/tabActions";
 import { getListTable } from "../../actions/tableActions";
 import TableApi from "../../api/TableApi";
 import TableRadio from "../Table";
@@ -15,7 +15,10 @@ const Home = (props) => {
 
     useEffect(() => {
         dispatch(getListTable({ byStatus }));
-    }, [byStatus, dispatch]);
+        if (panes.length === 0) {
+            dispatch(getInvoice());
+        }
+    }, [byStatus, dispatch, panes.length]);
 
     const add = async (table) => {
         const newPanes = [...panes];

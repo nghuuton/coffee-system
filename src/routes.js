@@ -1,17 +1,17 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
-import Home from "./components/Home";
-import Menu from "./components/Menu";
-import LayoutSystem from "./HOC/LayoutSystem";
+import { Redirect, Route, Switch } from "react-router-dom";
+import Login from "./components/Login";
+import Auth from "./HOC/auth";
+import DashBoard from "./pages/Dashboard";
 
 function Routes() {
     return (
-        <LayoutSystem>
-            <Switch>
-                <Route path="/" exact component={Home} />
-                <Route path="/menu" exact component={Menu} />
-            </Switch>
-        </LayoutSystem>
+        <Switch>
+            <Redirect exact from="/" to="/coffee" />
+
+            <Route path="/coffee" component={DashBoard} />
+            <Route path="/login" exact component={Auth(Login, false)} />
+        </Switch>
     );
 }
 
