@@ -9,6 +9,7 @@ import {
 } from "../../actions/tabActions";
 import removeImg from "../../image/delete.svg";
 import noteImg from "../../image/edit.svg";
+import { formatMoney } from "../../utils/formatNumber";
 
 const TabContent = ({ pane }) => {
     const dispatch = useDispatch();
@@ -26,11 +27,7 @@ const TabContent = ({ pane }) => {
     };
 
     const caculatorTotal = (product) => {
-        return product.quantity * product._id.price;
-    };
-
-    const formatMoney = (total) => {
-        return `${total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+        return product.quantity * product.price;
     };
 
     const removeProduct = (p, activeKey) => {
@@ -40,7 +37,7 @@ const TabContent = ({ pane }) => {
     return (
         <>
             {product.map((item) => (
-                <div className="tab_content__item" key={item._id._id}>
+                <div className="tab_content__item" key={item._id}>
                     <div className="tab_content__item_btn_delete">
                         <img
                             src={removeImg}
@@ -49,16 +46,13 @@ const TabContent = ({ pane }) => {
                         />
                     </div>
                     <div className="tab__content__item__title">
-                        <span>{item._id.name}</span>
+                        <span>{item.name}</span>
                         <span>
                             Ghi chú <img src={noteImg} alt="note" />
                         </span>
                     </div>
                     <div className="tab__content__item__input">
-                        <Input
-                            className="input_price"
-                            value={formatMoney(item._id.price)}
-                        />
+                        <Input className="input_price" value={formatMoney(item.price)} />
                         <div className="tab__content__item__input__quantity">
                             <Button onClick={() => incrementQuantity(item, activeKey)}>
                                 <PlusOutlined />

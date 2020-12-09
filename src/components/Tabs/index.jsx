@@ -1,8 +1,8 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { changeTab, removeTab } from "../../actions/tabActions";
 
 import { Card, Tabs } from "antd";
-import { changeTab, removeTab } from "../../actions/tabActions";
-import { connect } from "react-redux";
 import TabContent from "../TabContent";
 const { TabPane } = Tabs;
 
@@ -16,25 +16,11 @@ class TabsHoaDon extends Component {
     };
 
     remove = (targetKey) => {
-        const { panes, activeKey } = this.props.tabs;
-        let newActiveKey = activeKey;
-        let lastIndex;
+        const { panes } = this.props.tabs;
 
-        panes.forEach((pane, i) => {
-            if (pane.table._id === targetKey) {
-                lastIndex = i - 1;
-            }
-        });
-
+        const index = panes.findIndex((item) => item.table._id === targetKey);
+        const newActiveKey = panes.length > 1 ? panes[index + 1].table._id : "";
         const newPanes = panes.filter((pane) => pane.table._id !== targetKey);
-
-        if (newPanes.length && newActiveKey === targetKey) {
-            if (lastIndex >= 0) {
-                newActiveKey = newPanes[lastIndex].table._id;
-            } else {
-                newActiveKey = newPanes[0].table._id;
-            }
-        }
 
         this.props.dispatch(removeTab(newPanes));
         this.props.dispatch(changeTab(newActiveKey));

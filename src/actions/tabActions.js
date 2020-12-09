@@ -12,7 +12,17 @@ import {
 export function addNewTab(name, table, data) {
     const { detailInvoice, result } = data;
     const { product, totalPayment, intoMoney } = detailInvoice ? detailInvoice : {};
-    const content = product ? product : [];
+    const newContent =
+        product &&
+        product.map((item) => {
+            return {
+                quantity: item.quantity,
+                ...item._id,
+            };
+        });
+
+    const content = product ? newContent : [];
+
     const newTab = {
         title: name,
         content,

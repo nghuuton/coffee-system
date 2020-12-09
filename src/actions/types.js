@@ -9,3 +9,6 @@ export const DECREMENT_PRODUCT = "DECREMENT_PRODUCT";
 export const DELETE_PRODUCT = "DELETE_PRODUCT";
 // * Table
 export const GET_LIST_TABLE = "GET_LIST_TABLE";
+
+// * Product
+export const GET_LIST_PRODUCT = "GET_LIST_PRODUCT";

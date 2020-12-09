@@ -26,7 +26,13 @@ export default function (state = { panes: [] }, action) {
                 ...state,
                 panes: [
                     ...state.panes.slice(0, idx),
-                    { ...result, content: [...result.content, action.payload.product] },
+                    {
+                        ...result,
+                        content: [
+                            ...result.content,
+                            { ...action.payload.product, quantity: 1 },
+                        ],
+                    },
                     ...state.panes.slice(idx + 1),
                 ],
             };
@@ -34,12 +40,15 @@ export default function (state = { panes: [] }, action) {
             const { activeKey, product } = action.payload;
             const pane = state.panes.find((item) => item.table._id === activeKey);
             const indexPane = state.panes.indexOf(pane);
-            const indexProduct = pane.content.indexOf(product);
+            const indexProduct = pane.content.findIndex(
+                (item) => item._id === product._id
+            );
             const newContent = [
                 ...pane.content.slice(0, indexProduct),
-                { ...product, quantity: product.quantity + 1 },
+                { ...product, quantity: pane.content[indexProduct].quantity + 1 },
                 ...pane.content.slice(indexProduct + 1),
             ];
+
             return {
                 ...state,
                 panes: [

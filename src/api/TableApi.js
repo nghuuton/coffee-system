@@ -9,6 +9,10 @@ const TableApi = {
         const url = "/table";
         return axiosClient.post(url, data);
     },
+    getTableNotPayment: () => {
+        const url = "/table/byStatus";
+        return axiosClient.get(url);
+    },
 };
 
 export default TableApi;

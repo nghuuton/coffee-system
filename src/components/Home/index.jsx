@@ -29,9 +29,15 @@ const Home = (props) => {
     };
 
     const getAll = () => {
-        dispatch(getListTable());
+        dispatch(getListTable("Tất cả"));
         setByStatus("");
     };
+
+    const [tool, setTool] = useState([
+        { name: "Tất cả", function: () => getAll() },
+        { name: "Bàn trống", function: () => setByStatus("Trống") },
+        { name: "Chưa thanh toán", function: () => setByStatus("Chưa thanh toán") },
+    ]);
 
     const changePage = (page) => {
         console.log(page);
@@ -40,13 +46,14 @@ const Home = (props) => {
     return (
         <>
             <div className="btn_filter_group">
-                <Button onClick={() => getAll()}>Tất cả</Button>
-                <Button onClick={() => setByStatus("Trống")}>Bàn trống</Button>
-                <Button>Đã thanh toán</Button>
-                <Button>Chưa thanh toán</Button>
+                {tool.map((item, index) => (
+                    <Button onClick={item.function} key={index}>
+                        {item.name}
+                    </Button>
+                ))}
             </div>
             <div className="wrapper">
-                <div className="list_tables">
+                <div className="wrapper__list">
                     {listTable &&
                         listTable.map((item) => (
                             <TableRadio
