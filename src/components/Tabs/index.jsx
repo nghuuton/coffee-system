@@ -1,4 +1,4 @@
-import { Button, Card, Tabs } from "antd";
+import { Card, Tabs } from "antd";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { changeTab, removeTab } from "../../actions/tabActions";
@@ -16,12 +16,22 @@ class TabsHoaDon extends Component {
     };
 
     remove = (targetKey) => {
-        const { panes } = this.props.tabs;
-
-        const index = panes.findIndex((item) => item.table._id === targetKey);
-        const newActiveKey = panes.length > 1 ? panes[index + 1].table._id : "";
+        const { panes, activeKey } = this.props.tabs;
+        let newActiveKey = activeKey;
+        let lastIndex;
+        panes.forEach((pane, i) => {
+            if (pane.key === targetKey) {
+                lastIndex = i - 1;
+            }
+        });
         const newPanes = panes.filter((pane) => pane.table._id !== targetKey);
-
+        if (newPanes.length && newActiveKey === targetKey) {
+            if (lastIndex >= 0) {
+                newActiveKey = newPanes[lastIndex].table._id;
+            } else {
+                newActiveKey = newPanes[0].table._id;
+            }
+        }
         this.props.dispatch(removeTab(newPanes));
         this.props.dispatch(changeTab(newActiveKey));
     };
@@ -36,13 +46,9 @@ class TabsHoaDon extends Component {
                 activeKey={activeKey}
                 hideAdd
             >
-                {panes.length > 0 &&
+                {panes &&
                     panes.map((pane) => (
-                        <TabPane
-                            tab={pane.title}
-                            key={pane.table._id}
-                            closable={pane.closable}
-                        >
+                        <TabPane tab={pane.title} key={pane.table._id} closable>
                             <Card
                                 className="content_tab"
                                 bordered={false}
@@ -56,24 +62,6 @@ class TabsHoaDon extends Component {
                                         <TabContent pane={pane} />
                                     </div>
                                 )}
-                                <div className="btn_group">
-                                    <div className="tool_bill">
-                                        <Button className="btn_notification">
-                                            Thông Báo Bếp
-                                        </Button>
-                                        <Button className="btn_group_bill">
-                                            Ghép Hoá Đơn
-                                        </Button>
-                                    </div>
-                                    <div className="tool_bill">
-                                        <Button className="btn_group_table">
-                                            Ghép Bàn
-                                        </Button>
-                                        <Button className="btn_payment">
-                                            Yêu Cầu Thanh Toán
-                                        </Button>
-                                    </div>
-                                </div>
                             </Card>
                         </TabPane>
                     ))}

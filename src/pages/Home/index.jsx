@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addNewTab, changeTab, getInvoice } from "../../actions/tabActions";
 import { getListTable } from "../../actions/tableActions";
 import TableApi from "../../api/TableApi";
-import TableRadio from "../Table";
+import TableRadio from "../../components/Table";
 
-const Home = (props) => {
+const Home = () => {
     const dispatch = useDispatch();
     const { listTable } = useSelector((state) => state.tables);
     const { panes } = useSelector((state) => state.tabs);
@@ -15,10 +15,10 @@ const Home = (props) => {
 
     useEffect(() => {
         dispatch(getListTable({ byStatus }));
-        if (panes.length === 0) {
+        if (panes && panes.length === 0) {
             dispatch(getInvoice());
         }
-    }, [byStatus, dispatch, panes.length]);
+    }, [byStatus, dispatch]);
 
     const add = async (table) => {
         const newPanes = [...panes];
@@ -67,12 +67,6 @@ const Home = (props) => {
                             />
                         ))}
                 </div>
-                <Pagination
-                    defaultCurrent={1}
-                    total={listTable && listTable.length}
-                    className="pagination"
-                    pageSize={3}
-                />
             </div>
         </>
     );

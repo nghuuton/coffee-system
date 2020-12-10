@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Spin, Space } from "antd";
 
 import { accountAuth } from "../actions/accountAction";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (ComposedClass, reload, adminRoute = null) {
     class AuthenticationCheck extends Component {
-        state = {
-            loading: true,
-        };
         componentDidMount() {
             this.props
                 .dispatch(accountAuth())
@@ -21,7 +17,7 @@ export default function (ComposedClass, reload, adminRoute = null) {
                             this.props.history.push("/login");
                         }
                     } else {
-                        if (adminRoute && accountDetail.account.type !== 0) {
+                        if (adminRoute && accountDetail.account.type === 0) {
                             this.props.history.push("/login");
                         } else {
                             if (reload === false) {
@@ -30,19 +26,14 @@ export default function (ComposedClass, reload, adminRoute = null) {
                             }
                         }
                     }
-                    this.setState({
-                        loading: false,
-                    });
                 })
                 .catch((err) => {
                     this.props.history.push("/login");
                 });
         }
 
-        componentWillUnmount() {}
-
         render() {
-            return <ComposedClass {...this.props} user={this.props.user} />;
+            return <ComposedClass {...this.props} user={this.props.account} />;
         }
     }
     function mapStateToProps(state) {

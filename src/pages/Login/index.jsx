@@ -26,26 +26,30 @@ const Login = (props) => {
         dispatch(accountLogin(values))
             .then((res) => {
                 if (res.payload.success) {
-                    localStorage.setItem("token", res.payload.token);
-                    props.history.push("/");
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-                if (err) {
-                    message.error({
-                        content: "Sai thông tin đăng nhập",
+                    props.history.replace("/");
+                    message.success({
+                        content: "Đăng nhập thành công",
                         style: {
                             position: "relative",
                             top: 10,
                             right: "-80vh",
                         },
                     });
+                    formAction.resetForm();
+                    form.resetFields();
                 }
+            })
+            .catch((err) => {
+                message.error({
+                    content: "Sai thông tin đăng nhập",
+                    style: {
+                        position: "relative",
+                        top: 10,
+                        right: "-80vh",
+                    },
+                });
             });
         formAction.setSubmitting(false);
-        formAction.resetForm();
-        form.resetFields();
     };
 
     return (

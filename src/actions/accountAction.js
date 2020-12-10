@@ -1,5 +1,5 @@
 import AccountApi from "../api/accountApi";
-import { ACCOUNT_AUTH, ACCOUNT_LOGIN } from "./types";
+import { ACCOUNT_AUTH, ACCOUNT_LOGIN, ACCOUNT_LOGOUT } from "./types";
 
 export function accountLogin(data) {
     const request = AccountApi.login(data);
@@ -14,5 +14,11 @@ export function accountAuth() {
     return {
         type: ACCOUNT_AUTH,
         payload: request,
+    };
+}
+
+export function accountLogout() {
+    return {
+        type: ACCOUNT_LOGOUT,
     };
 }

@@ -1,13 +1,12 @@
 import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import Home from "../../components/Home";
-import Menu from "../../components/Menu";
+import Menu from "../Menu";
 import Auth from "../../HOC/auth";
+import Home from "../Home";
 import LayoutSystem from "../../HOC/LayoutSystem";
 
 function DashBoard() {
     const match = useRouteMatch();
-
     return (
         <LayoutSystem>
             <Switch>

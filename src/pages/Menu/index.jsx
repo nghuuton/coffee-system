@@ -5,7 +5,7 @@ import { getListProduct } from "../../actions/productAction";
 import { addProduct, getInvoice, incrementProduct } from "../../actions/tabActions";
 
 import { Button } from "antd";
-import Product from "../Product";
+import Product from "../../components/Product";
 
 const Menu = () => {
     const dispatch = useDispatch();
@@ -15,10 +15,10 @@ const Menu = () => {
 
     useEffect(() => {
         dispatch(getListProduct({ _id: "123" }));
-        if (panes.length === 0) {
+        if (panes && panes.length === 0) {
             dispatch(getInvoice());
         }
-    }, [dispatch, panes.length]);
+    }, [dispatch]);
 
     const addNewProduct = (product) => {
         const pane = panes.find((item) => item.table._id === activeKey);

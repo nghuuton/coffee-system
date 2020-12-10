@@ -102,7 +102,8 @@
     flex-flow: row wrap;
     width: 100%;
     border: 1px solid #9fb7b9;
-    max-height: 500px;
+    max-height: 450px;
+    min-height: 450px;
     border-radius: 5px;
     overflow-y: scroll;
 }
@@ -251,7 +252,7 @@
 
 .btn_group {
     position: absolute;
-    bottom: 10vh;
+    bottom: 6vh;
 }
 
 .tool_bill button {
@@ -275,4 +276,43 @@
 .tool_bill .btn_group_table {
     background-color: #aed9e0;
     border: 1px solid #aed9e0;
+}
+
+.account_dropdown {
+    position: absolute;
+    right: 30px;
+    top: 15px;
+}
+
+.payment_group {
+    position: absolute;
+    bottom: 1vh;
+    right: 4vh;
+    font-weight: 500;
+}
+
+.payment_group .payment_money {
+    display: flex;
+    justify-content: space-between;
+}
+
+.payment_group .payment_money .payment_money_user {
+    color: red;
+}
+
+.payment_group .input_group {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    width: 400px;
+    margin-bottom: 10px;
+}
+
+.payment_group .input_group label {
+    width: 150px;
+}
+
+.payment_group .input_group input {
+    width: 100px;
+    height: 25px;
 }
