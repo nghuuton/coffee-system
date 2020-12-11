@@ -18,6 +18,7 @@ const { Header } = Layout;
 
 const HeaderSystem = (props) => {
     const dispatch = useDispatch();
+    const { accountDetail } = useSelector((state) => state.account);
 
     async function logOut(e) {
         localStorage.removeItem("token");
@@ -31,31 +32,35 @@ const HeaderSystem = (props) => {
             title: "Quản lý kho",
             icon: <InboxOutlined />,
             action: () => props.history.push("/"),
-            type: 0,
+            type: [0, 1],
         },
         {
             title: "Quản lý thực đơn",
             icon: <CoffeeOutlined />,
             action: () => props.history.push("/"),
-            type: 0,
+            type: [0, 1],
+        },
+        {
+            title: "Quản lý bếp",
+            icon: <CoffeeOutlined />,
+            action: () => props.history.push("/kitchen"),
+            type: [2],
         },
         {
             title: "Quản lý bàn",
             icon: <UngroupOutlined />,
             action: () => props.history.push("/"),
-            type: 0,
+            type: [0, 1],
         },
         { title: "Đăng xuất", icon: <ExportOutlined />, action: logOut, type: "public" },
     ];
-
-    const { accountDetail } = useSelector((state) => state.account);
 
     const menu = (
         <Menu>
             {menuAction.map((item, index) =>
                 accountDetail &&
-                accountDetail.account &&
-                accountDetail.account.type === item.type ? (
+                accountDetail.staff &&
+                item.type.includes(accountDetail.staff.account.type) === true ? (
                     <Menu.Item key={index} icon={item.icon} onClick={item.action}>
                         {item.title}
                     </Menu.Item>

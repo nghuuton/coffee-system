@@ -1,10 +1,8 @@
+import { Button } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { getListProduct } from "../../actions/productAction";
-import { addProduct, getInvoice, incrementProduct } from "../../actions/tabActions";
-
-import { Button } from "antd";
+import { addProduct, incrementProduct } from "../../actions/tabActions";
 import Product from "../../components/Product";
 
 const Menu = () => {

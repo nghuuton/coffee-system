@@ -18,12 +18,12 @@ export default function (ComposedClass, reload, adminRoute = null) {
                             this.props.history.push("/login");
                         }
                     } else {
-                        if (adminRoute && accountDetail.account.type === 0) {
-                            this.props.history.push("/login");
+                        if (accountDetail.staff.account.type === 2) {
+                            this.props.history.push("/kitchen");
                         } else {
                             if (reload === false) {
                                 // Public Route
-                                this.props.history.push("/");
+                                this.props.history.push("/kitchen");
                             }
                         }
                     }
@@ -34,7 +34,9 @@ export default function (ComposedClass, reload, adminRoute = null) {
                     this.setState({ loading: false });
                 });
         }
-
+        componentWillUnmount() {
+            this.setState({ loading: false });
+        }
         render() {
             if (this.state.loading) return <div>Loading......</div>;
             return <ComposedClass {...this.props} />;

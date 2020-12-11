@@ -68,16 +68,14 @@ const TabContent = ({ pane, socket }) => {
 
     // * Emit to Bartender
     const notificationTo = (pane) => {
-        const id = socket.id;
+        const userId = accountDetail.staff.account._id;
         const createBy = accountDetail.staff._id;
-        const tableId = pane.table.length
-            ? pane.table.map((item) => item._id)
-            : pane.table._id;
+        const table = pane.table;
         const products = pane.content;
         const data = {
-            id,
+            userId,
             products,
-            tableId,
+            table,
             createBy,
             totalPayment: total(pane.content),
             intoMoney: caculator(),

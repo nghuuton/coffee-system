@@ -108,7 +108,7 @@ export default function (state = { panes: [] }, action) {
             if (invoice.length !== 0) {
                 newPanes = invoice.map((item, index) => {
                     return {
-                        title: item.ownerTable[0].name,
+                        title: item.ownerTable.name,
                         content:
                             item.detailInvoice._id === detailInvoice[index]._id
                                 ? detailInvoice[index].product.map((item) => {
