@@ -1,7 +1,7 @@
-import { message } from "antd";
-import React, { useEffect, useState } from "react";
+import { message, Select } from "antd";
+import Modal from "antd/lib/modal/Modal";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import io from "socket.io-client";
 import {
     decrementProduct,
     deleteProduct,
@@ -11,43 +11,23 @@ import ButtonGroupBill from "../Button_Group_Bill";
 import Payment from "../Payment";
 import ProductInTabContent from "../Product_In_TabContent";
 
-const TabContent = ({ pane }) => {
+const { Option } = Select;
+
+const TabContent = ({ pane, socket }) => {
     const dispatch = useDispatch();
+    const { listTable } = useSelector((state) => state.tables);
     const { panes, activeKey } = useSelector((state) => state.tabs);
     const { content: product } = panes.find((item) => item.title === pane.title);
     const { accountDetail } = useSelector((state) => state.account);
 
-    const [socket, setSocket] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [percent, setPercent] = useState("");
     const [payment, setPayment] = useState("");
+    const [tables, setTables] = useState([]);
 
-    // * Setup socket
-    const setupSocket = () => {
-        const token = localStorage.getItem("token");
-        if (token && !socket) {
-            const newSocket = io("http://localhost:3001", {
-                query: {
-                    token: `${token}`,
-                },
-            });
-
-            newSocket.on("connect", () => {
-                console.log("Socket Ready");
-            });
-            newSocket.on("disconnect", () => {
-                setSocket(null);
-                setTimeout(setupSocket, 3000);
-            });
-            setSocket(newSocket);
-        }
-    };
-
-    useEffect(() => {
-        setupSocket();
-        return () => {
-            setSocket(null);
-        };
-    }, []);
+    const newListTable =
+        listTable &&
+        listTable.filter((item) => item._id !== activeKey && item.status === "Trống");
 
     const incrementQuantity = (p, activeKey) => {
         dispatch(incrementProduct(p, activeKey));
@@ -68,9 +48,12 @@ const TabContent = ({ pane }) => {
     };
 
     const total = (arrayProduct) => {
-        return arrayProduct
-            .map((item) => item.quantity * item.price)
-            .reduce((a, b) => a + b);
+        if (arrayProduct.length > 0) {
+            return arrayProduct
+                .map((item) => item.quantity * item.price)
+                .reduce((a, b) => a + b);
+        }
+        return 0;
     };
 
     const caculator = () => {
@@ -83,10 +66,13 @@ const TabContent = ({ pane }) => {
         return result;
     };
 
+    // * Emit to Bartender
     const notificationTo = (pane) => {
         const id = socket.id;
-        const createBy = accountDetail._id;
-        const tableId = pane.table._id;
+        const createBy = accountDetail.staff._id;
+        const tableId = pane.table.length
+            ? pane.table.map((item) => item._id)
+            : pane.table._id;
         const products = pane.content;
         const data = {
             id,
@@ -107,8 +93,27 @@ const TabContent = ({ pane }) => {
         });
     };
 
+    // * Modal
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    // * Modal handleChange Option
+
+    function handleChange(value) {
+        setTables(value);
+    }
+
     return (
-        <div>
+        <div className="tabs_bill">
             {product.map((item) => (
                 <ProductInTabContent
                     item={item}
@@ -120,7 +125,35 @@ const TabContent = ({ pane }) => {
                     removeProduct={removeProduct}
                 />
             ))}
-            <ButtonGroupBill pane={pane} notificationTo={notificationTo} />
+            <Modal
+                title="Ghép bàn"
+                visible={isModalVisible}
+                onOk={() => handleOk()}
+                onCancel={handleCancel}
+            >
+                <Select
+                    mode="multiple"
+                    style={{ width: "100%" }}
+                    placeholder="Chọn bàn cần ghép"
+                    onChange={handleChange}
+                    value={tables}
+                    optionLabelProp="label"
+                >
+                    {newListTable &&
+                        newListTable.map((item) => (
+                            <Option value={item._id} label={item.name} key={item._id}>
+                                <div className="demo-option-label-item">
+                                    <span role="img">{item.name}</span>
+                                </div>
+                            </Option>
+                        ))}
+                </Select>
+            </Modal>
+            <ButtonGroupBill
+                pane={pane}
+                notificationTo={notificationTo}
+                showModal={showModal}
+            />
             <Payment
                 pane={pane}
                 product={product}

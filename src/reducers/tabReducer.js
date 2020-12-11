@@ -33,7 +33,7 @@ export default function (state = { panes: [] }, action) {
                         ...result,
                         content: [
                             ...result.content,
-                            { ...action.payload.product, quantity: 1, note: "" },
+                            { ...action.payload.product, quantity: 1 },
                         ],
                     },
                     ...state.panes.slice(idx + 1),
@@ -108,7 +108,7 @@ export default function (state = { panes: [] }, action) {
             if (invoice.length !== 0) {
                 newPanes = invoice.map((item, index) => {
                     return {
-                        title: item.ownerTable.name,
+                        title: item.ownerTable[0].name,
                         content:
                             item.detailInvoice._id === detailInvoice[index]._id
                                 ? detailInvoice[index].product.map((item) => {

@@ -3,10 +3,15 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { changeTab, removeTab } from "../../actions/tabActions";
 import TabContent from "../TabContent";
+import io from "socket.io-client";
 
 const { TabPane } = Tabs;
 
 class TabsHoaDon extends Component {
+    state = {
+        socket: null,
+    };
+
     onChange = (activeKey) => {
         this.props.dispatch(changeTab(activeKey));
     };
@@ -14,6 +19,34 @@ class TabsHoaDon extends Component {
     onEdit = (targetKey, action) => {
         this[action](targetKey);
     };
+    // * Setup socket
+    setupSocket = () => {
+        const { socket } = this.state;
+        const token = localStorage.getItem("token");
+        if (token && !socket) {
+            const newSocket = io("http://localhost:3001", {
+                query: {
+                    token: `${token}`,
+                },
+            });
+
+            newSocket.on("connect", () => {
+                console.log("Socket Ready");
+            });
+            newSocket.on("disconnect", () => {
+                this.setState({ socket: null });
+            });
+            this.setState({ socket: newSocket });
+        }
+    };
+
+    componentDidMount() {
+        this.setupSocket();
+    }
+
+    componentWillUnmount() {
+        this.setState({ socket: null });
+    }
 
     remove = (targetKey) => {
         const { panes, activeKey } = this.props.tabs;
@@ -24,7 +57,8 @@ class TabsHoaDon extends Component {
                 lastIndex = i - 1;
             }
         });
-        const newPanes = panes.filter((pane) => pane.table._id !== targetKey);
+        const newPanes = panes.filter((pane) => pane.table[0]._id !== targetKey);
+
         if (newPanes.length && newActiveKey === targetKey) {
             if (lastIndex >= 0) {
                 newActiveKey = newPanes[lastIndex].table._id;
@@ -38,6 +72,7 @@ class TabsHoaDon extends Component {
 
     render() {
         const { panes, activeKey } = this.props.tabs;
+        const { socket } = this.state;
         return (
             <Tabs
                 type="editable-card"
@@ -46,25 +81,22 @@ class TabsHoaDon extends Component {
                 activeKey={activeKey}
                 hideAdd
             >
-                {panes &&
-                    panes.map((pane) => (
-                        <TabPane tab={pane.title} key={pane.table._id} closable>
-                            <Card
-                                className="content_tab"
-                                bordered={false}
-                                style={{
-                                    width: "100%",
-                                    height: 750,
-                                }}
-                            >
-                                {pane && pane.content.length > 0 && (
-                                    <div className="tab_content">
-                                        <TabContent pane={pane} />
-                                    </div>
-                                )}
-                            </Card>
-                        </TabPane>
-                    ))}
+                {panes.map((pane) => (
+                    <TabPane tab={pane.title} key={pane.table._id} closable>
+                        <Card
+                            className="content_tab"
+                            bordered={false}
+                            style={{
+                                width: "100%",
+                                height: 750,
+                            }}
+                        >
+                            <div className="tab_content">
+                                <TabContent pane={pane} socket={socket} />
+                            </div>
+                        </Card>
+                    </TabPane>
+                ))}
             </Tabs>
         );
     }

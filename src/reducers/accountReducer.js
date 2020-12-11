@@ -5,13 +5,16 @@ export default function (state = {}, action) {
     switch (action.type) {
         case ACCOUNT_LOGIN:
             localStorage.setItem("token", action.payload.token);
-            return { ...state, loginSuccess: true };
+            return { ...state, accountDetail: { loginSuccess: true } };
         case ACCOUNT_AUTH:
-            return { ...state, accountDetail: { ...action.payload, loginSuccess: true } };
+            return {
+                ...state,
+                accountDetail: { ...action.payload },
+            };
         case ACCOUNT_LOGOUT:
             return {
                 ...state,
-                accountDetail: {},
+                accountDetail: { loginSuccess: false },
             };
         default:
             return state;

@@ -1,5 +1,5 @@
 import { Button, Dropdown, Input, Layout, Menu } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
     UngroupOutlined,
@@ -8,6 +8,7 @@ import {
     DownOutlined,
     ExportOutlined,
     InfoCircleOutlined,
+    InboxOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router";
@@ -17,26 +18,55 @@ const { Header } = Layout;
 
 const HeaderSystem = (props) => {
     const dispatch = useDispatch();
-    const { accountDetail } = useSelector((state) => state.account);
 
-    function handleButtonClick(e) {}
-
-    function handleMenuClick(e) {
-        if (e.key === "3") {
-            localStorage.setItem("token", "");
-            dispatch(accountLogout());
-            props.history.push("/login");
-        }
+    async function logOut(e) {
+        localStorage.removeItem("token");
+        await dispatch(accountLogout());
+        props.history.push("/login");
     }
 
+    const menuAction = [
+        { title: "Thông tin", icon: <InfoCircleOutlined />, action: "", type: "public" },
+        {
+            title: "Quản lý kho",
+            icon: <InboxOutlined />,
+            action: () => props.history.push("/"),
+            type: 0,
+        },
+        {
+            title: "Quản lý thực đơn",
+            icon: <CoffeeOutlined />,
+            action: () => props.history.push("/"),
+            type: 0,
+        },
+        {
+            title: "Quản lý bàn",
+            icon: <UngroupOutlined />,
+            action: () => props.history.push("/"),
+            type: 0,
+        },
+        { title: "Đăng xuất", icon: <ExportOutlined />, action: logOut, type: "public" },
+    ];
+
+    const { accountDetail } = useSelector((state) => state.account);
+
     const menu = (
-        <Menu onClick={handleMenuClick}>
-            <Menu.Item key="1" icon={<InfoCircleOutlined />}>
-                Thông tin
-            </Menu.Item>
-            <Menu.Item key="3" icon={<ExportOutlined />}>
-                Đăng xuất
-            </Menu.Item>
+        <Menu>
+            {menuAction.map((item, index) =>
+                accountDetail &&
+                accountDetail.account &&
+                accountDetail.account.type === item.type ? (
+                    <Menu.Item key={index} icon={item.icon} onClick={item.action}>
+                        {item.title}
+                    </Menu.Item>
+                ) : (
+                    item.type === "public" && (
+                        <Menu.Item key={index} icon={item.icon} onClick={item.action}>
+                            {item.title}
+                        </Menu.Item>
+                    )
+                )
+            )}
         </Menu>
     );
 

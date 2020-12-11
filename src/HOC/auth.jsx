@@ -6,6 +6,7 @@ import { accountAuth } from "../actions/accountAction";
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (ComposedClass, reload, adminRoute = null) {
     class AuthenticationCheck extends Component {
+        state = { loading: true };
         componentDidMount() {
             this.props
                 .dispatch(accountAuth())
@@ -26,14 +27,17 @@ export default function (ComposedClass, reload, adminRoute = null) {
                             }
                         }
                     }
+                    this.setState({ loading: false });
                 })
                 .catch((err) => {
                     this.props.history.push("/login");
+                    this.setState({ loading: false });
                 });
         }
 
         render() {
-            return <ComposedClass {...this.props} user={this.props.account} />;
+            if (this.state.loading) return <div>Loading......</div>;
+            return <ComposedClass {...this.props} />;
         }
     }
     function mapStateToProps(state) {

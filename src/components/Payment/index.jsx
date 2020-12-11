@@ -45,7 +45,7 @@ const Payment = ({
             <Divider />
             <p className="payment_money">
                 Tiền khách phải trả
-                <span>{moneyPay() < 0 ? 0 : `${formatMoney(moneyPay())} VNĐ`}</span>
+                <span>{moneyPay() < 0 ? "0 VNĐ" : `${formatMoney(moneyPay())} VNĐ`}</span>
             </p>
         </div>
     );

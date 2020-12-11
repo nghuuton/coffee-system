@@ -1,12 +1,20 @@
 import React from "react";
 
 import tableImg from "../../image/simple-table.svg";
+import tableNotempty from "../../image/meeting.svg";
 
 const TableRadio = ({ onClick, table }) => {
     const statusColor = {
         empty: "#46B1C9",
         notEmpty: "#DB162F",
     };
+    const { status } = table;
+    let imageTable = tableImg;
+
+    if (status === "Đã có người") {
+        imageTable = tableNotempty;
+    }
+
     return (
         <div className="table_checkbox_group">
             <input
@@ -27,7 +35,7 @@ const TableRadio = ({ onClick, table }) => {
                                     : statusColor.empty,
                         }}
                     ></div>
-                    <img src={tableImg} alt="Table" style={{ width: 100 }} />
+                    <img src={imageTable} alt="Table" style={{ width: 100 }} />
                     <span>{table.name}</span>
                 </label>
             </div>

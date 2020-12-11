@@ -10,7 +10,6 @@ const Home = () => {
     const dispatch = useDispatch();
     const { listTable } = useSelector((state) => state.tables);
     const { panes } = useSelector((state) => state.tabs);
-
     const [byStatus, setByStatus] = useState("");
 
     useEffect(() => {

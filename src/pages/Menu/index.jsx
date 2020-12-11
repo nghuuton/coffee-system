@@ -15,9 +15,6 @@ const Menu = () => {
 
     useEffect(() => {
         dispatch(getListProduct({ _id: "123" }));
-        if (panes && panes.length === 0) {
-            dispatch(getInvoice());
-        }
     }, [dispatch]);
 
     const addNewProduct = (product) => {
