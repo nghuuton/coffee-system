@@ -19,3 +19,6 @@ export const GET_LIST_PRODUCT = "GET_LIST_PRODUCT";
 export const ACCOUNT_LOGIN = "ACCOUNT_LOGIN";
 export const ACCOUNT_LOGOUT = "ACCOUNT_LOGOUT";
 export const ACCOUNT_AUTH = "ACCOUNT_AUTH";
+
+// * Invoice
+export const GET_INVOICE_PRODUCT = "GET_INVOICE_PRODUCT";

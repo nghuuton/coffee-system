@@ -7,6 +7,7 @@ import {
     deleteProduct,
     incrementProduct,
 } from "../../actions/tabActions";
+import { caculatorTotal, total } from "../../utils/formatNumber";
 import ButtonGroupBill from "../Button_Group_Bill";
 import Payment from "../Payment";
 import ProductInTabContent from "../Product_In_TabContent";
@@ -39,21 +40,8 @@ const TabContent = ({ pane, socket }) => {
         }
     };
 
-    const caculatorTotal = (product) => {
-        return product.quantity * product.price;
-    };
-
     const removeProduct = (p, activeKey) => {
         dispatch(deleteProduct(p, activeKey));
-    };
-
-    const total = (arrayProduct) => {
-        if (arrayProduct.length > 0) {
-            return arrayProduct
-                .map((item) => item.quantity * item.price)
-                .reduce((a, b) => a + b);
-        }
-        return 0;
     };
 
     const caculator = () => {

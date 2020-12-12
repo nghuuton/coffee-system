@@ -1,4 +1,4 @@
-import { Card, Tabs } from "antd";
+import { Card, message, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
@@ -40,7 +40,14 @@ const TabsHoaDon = () => {
     useEffect(() => {
         if (!socket) return;
         socket.on("LISTEN_NOTIFICATION_FROM_KITCHEN", (data) => {
-            console.log(data);
+            message.success({
+                content: `${data.table.name} đã xong`,
+                style: {
+                    position: "relative",
+                    top: 10,
+                    right: "-80vh",
+                },
+            });
         });
     }, [socket]);
 

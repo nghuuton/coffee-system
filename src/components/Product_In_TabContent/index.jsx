@@ -5,6 +5,7 @@ import { formatMoney } from "../../utils/formatNumber";
 
 import removeImg from "../../image/delete.svg";
 import noteImg from "../../image/edit.svg";
+import { useSelector } from "react-redux";
 
 const ProductInTabContent = ({
     item,

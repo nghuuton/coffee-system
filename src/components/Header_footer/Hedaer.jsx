@@ -98,7 +98,8 @@ const HeaderSystem = (props) => {
             />
             <Dropdown overlay={menu} className="account_dropdown">
                 <Button>
-                    <UserOutlined /> {accountDetail && accountDetail.lastname}
+                    <UserOutlined />{" "}
+                    {accountDetail && accountDetail.staff && accountDetail.staff.lastname}
                     <DownOutlined />
                 </Button>
             </Dropdown>

@@ -321,13 +321,23 @@
 .content_kitchen {
     width: 100%;
     height: 100%;
+    min-height: 860px;
     padding: 10px;
     display: flex;
     background-color: rgb(105, 95, 189);
 }
+
+.content_kitchen .btn_logOut {
+    position: absolute;
+    bottom: 30px;
+    right: 2.2vh;
+}
+
 .sidebar_left,
 .sidebar_right {
     width: 50%;
+    min-height: 750px;
+    max-height: 700px;
     background-color: #fff;
     margin: 10px 10px 0;
     border-radius: 5px 5px 0 0;
@@ -346,8 +356,9 @@
     color: #fff;
     border-radius: 5px 5px 0 0;
 }
-.wrapper {
+.wrapper_kitchen {
     margin: 10px 0;
+    cursor: pointer;
 }
 .donhang {
     margin: 0 10px;
@@ -378,4 +389,28 @@
     font-size: 14px;
     font-weight: 400;
     opacity: 0.8;
+}
+
+.product_item {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    font-size: medium;
+    font-weight: 500;
+    height: 70px;
+    border: 1px solid #aed9e0;
+}
+
+.product_item .product_item__name {
+    margin-left: 10px;
+}
+
+.product_item .product_item__quantity {
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.procuct__image__requirement {
+    margin-left: 5px;
+    width: 64px;
 }
