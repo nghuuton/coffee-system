@@ -1,66 +1,91 @@
 import React from "react";
-import { DatePicker, Form, Input, TimePicker, Select } from "antd";
+import { DatePicker, Form, Input, TimePicker, Select, Upload, Button } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import Thumb from "../components/Thumb";
 
+const FormItem = Form.Item;
 const { Option } = Select;
 
 const CreateAntField = (AntComponent) => ({
     field,
     form,
-    type,
-    label,
     hasFeedback,
+    label,
     selectOptions,
-    ...rest
+    submitCount,
+    btnSubmit,
+    type,
+    ...props
 }) => {
-    const { name } = field;
-    const { errors, touched, handleChange, handleBlur, setFieldValue } = form;
-    const showError = errors[name] && touched[name];
-    const handlerChange = (values) => {
-        setFieldValue(name, values);
-    };
+    const touched = form.touched[field.name];
+    const submitted = submitCount > 0;
+    const hasError = form.errors[field.name];
+    const submittedError = hasError && submitted;
+    const touchedError = hasError && touched;
+    const onInputChange = ({ target: { value } }) =>
+        form.setFieldValue(field.name, value);
+    const onChange = (value) => form.setFieldValue(field.name, value);
+    const onBlur = () => form.setFieldTouched(field.name, true);
+    const inputFile = React.createRef();
+
     return (
-        <Form.Item
-            name={name}
-            label={label}
-            hasFeedback={hasFeedback}
-            help={showError && errors[name]}
-            validateStatus={showError && "error"}
-        >
-            {name !== "password" ? (
-                <AntComponent
-                    {...field}
-                    {...rest}
-                    onChange={type ? handleChange : handlerChange}
-                    onBlur={handleBlur}
-                >
-                    {selectOptions &&
-                        selectOptions.map((item) => (
-                            <Option value={item.key} key={item.key}>
-                                {item.value}
-                            </Option>
-                        ))}
-                </AntComponent>
-            ) : (
-                <AntComponent.Password
-                    {...field}
-                    {...rest}
-                    onChange={type ? handleChange : handlerChange}
-                    onBlur={handleBlur}
-                    allowClear={true}
-                >
-                    {selectOptions &&
-                        selectOptions.map((item) => (
-                            <Option value={item.key} key={item.key}>
-                                {item.value}
-                            </Option>
-                        ))}
-                </AntComponent.Password>
-            )}
-        </Form.Item>
+        <div className="field-container">
+            <FormItem
+                label={label}
+                hasFeedback={
+                    (hasFeedback && submitted) || (hasFeedback && touched) ? true : false
+                }
+                help={submittedError || touchedError ? hasError : false}
+                validateStatus={submittedError || touchedError ? "error" : "success"}
+            >
+                {field.name === "image" || field.name === "xls" ? (
+                    <>
+                        <input
+                            id="image"
+                            name={field.name}
+                            type="file"
+                            onChange={(event) => {
+                                form.setFieldValue(
+                                    `${field.name}`,
+                                    event.currentTarget.files[0]
+                                );
+                                btnSubmit.current.click();
+                            }}
+                            ref={inputFile}
+                            style={{ display: "none" }}
+                        />
+                        <Button
+                            size="middle"
+                            onClick={() => {
+                                inputFile.current.click();
+                            }}
+                            icon={<UploadOutlined />}
+                        >
+                            Tải File
+                        </Button>
+                        {field.name === "image" && <Thumb file={form.values.image} />}
+                    </>
+                ) : (
+                    <AntComponent
+                        {...field}
+                        {...props}
+                        type={type}
+                        onBlur={onBlur}
+                        onChange={type ? onInputChange : onChange}
+                    >
+                        {selectOptions &&
+                            selectOptions.map((item) => (
+                                <Option key={item._id}>{item.name}</Option>
+                            ))}
+                    </AntComponent>
+                )}
+            </FormItem>
+        </div>
     );
 };
 
 export const AntSelect = CreateAntField(Select);
+export const AntDatePicker = CreateAntField(DatePicker);
 export const AntInput = CreateAntField(Input);
 export const AntTimePicker = CreateAntField(TimePicker);
-export const AntDatePicker = CreateAntField(DatePicker);
+export const UploadFile = CreateAntField(Upload);

@@ -71,6 +71,12 @@
     flex-wrap: wrap;
 }
 
+.btn_filter_group .btn_import {
+    position: relative;
+    top: 5px;
+    margin-left: 5px;
+}
+
 .btn_filter_group > button {
     margin-top: 5px;
     margin-left: 5px;
@@ -204,6 +210,8 @@
     top: 0px;
     right: 5px;
     font-size: large;
+    font-weight: 600;
+    color: #f76c5e;
 }
 
 .form_login {
@@ -413,4 +421,115 @@
 .procuct__image__requirement {
     margin-left: 5px;
     width: 64px;
+}
+
+.logo {
+    display: flex;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px;
+    color: #fff;
+    text-align: center;
+    font-size: large;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    cursor: pointer;
+    justify-content: center;
+}
+
+.logo span {
+    margin-left: 10px;
+}
+
+.logo image {
+    width: 30px;
+}
+
+.chart_form {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.chart_form button {
+    margin-left: 10px;
+}
+
+.button_group {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.button_group button {
+    margin: 5px;
+}
+
+.form_product label {
+    width: 120px;
+    font-weight: 500;
+}
+
+.wrapper_image {
+    margin-top: 10px;
+    padding: 3px;
+}
+
+.procuct__image {
+    width: 150px;
+}
+
+.table_type {
+    width: 50%;
+}
+
+.type_table {
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    height: 270px;
+}
+
+.table_comodity {
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    height: 300px;
+}
+
+.form_type {
+    width: 30%;
+    padding: 10px;
+    margin-left: 30vh;
+}
+
+.import_excel {
+    width: 0px;
+    height: 0px;
+    position: relative;
+    left: 10px;
+    bottom: -4px;
+}
+
+.form_invoice label {
+    width: 100px;
+}
+
+.input_comodity {
+    position: relative;
+    display: flex;
+    flex-flow: row;
+}
+
+.input_comodity input {
+}
+
+.input_comodity .input_comodity__btn_remove {
+    width: 40px;
+}
+
+.input_comodity .input_comodity__btn_add {
+    position: absolute;
+    bottom: -32px;
+    right: 0px;
 }

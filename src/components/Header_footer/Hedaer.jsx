@@ -9,6 +9,7 @@ import {
     ExportOutlined,
     InfoCircleOutlined,
     InboxOutlined,
+    LineChartOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router";
@@ -29,15 +30,21 @@ const HeaderSystem = (props) => {
     const menuAction = [
         { title: "Thông tin", icon: <InfoCircleOutlined />, action: "", type: "public" },
         {
+            title: "Thống kê",
+            icon: <LineChartOutlined />,
+            action: () => props.history.push("/admin"),
+            type: [0],
+        },
+        {
             title: "Quản lý kho",
             icon: <InboxOutlined />,
-            action: () => props.history.push("/"),
+            action: () => props.history.push("/admin/store"),
             type: [0, 1],
         },
         {
             title: "Quản lý thực đơn",
             icon: <CoffeeOutlined />,
-            action: () => props.history.push("/"),
+            action: () => props.history.push("/admin/menu"),
             type: [0, 1],
         },
         {
@@ -49,7 +56,7 @@ const HeaderSystem = (props) => {
         {
             title: "Quản lý bàn",
             icon: <UngroupOutlined />,
-            action: () => props.history.push("/"),
+            action: () => props.history.push("/admin/table"),
             type: [0, 1],
         },
         { title: "Đăng xuất", icon: <ExportOutlined />, action: logOut, type: "public" },

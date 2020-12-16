@@ -14,6 +14,10 @@ export const GET_LIST_TABLE = "GET_LIST_TABLE";
 
 // * Product
 export const GET_LIST_PRODUCT = "GET_LIST_PRODUCT";
+export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
+export const ADD_NEW_PRODUCT = "ADD_NEW_PRODUCT";
+export const REMOVE_PRODUCT = "REMOVE_PRODUCT";
+export const UPLOAD_EXCEL_PRODUCT = "UPLOAD_EXCEL_PRODUCT";
 
 // * Account
 export const ACCOUNT_LOGIN = "ACCOUNT_LOGIN";
@@ -22,3 +26,27 @@ export const ACCOUNT_AUTH = "ACCOUNT_AUTH";
 
 // * Invoice
 export const GET_INVOICE_PRODUCT = "GET_INVOICE_PRODUCT";
+export const REMOVE_INVOICE_PRODUCT = "REMOVE_INVOICE_PRODUCT";
+export const REQUIREMENT_PAYMENT = "REQUIREMENT_PAYMENT";
+
+// * Type
+export const GET_LIST_TYPE = "GET_LIST_TYPE";
+export const REMOVE_TYPE = "REMOVE_TYPE";
+export const ADD_NEW_TYPE = "ADD_NEW_TYPE";
+export const UPDATE_TYPE = "UPDATE_TYPE";
+
+// * Comodity
+export const GET_LIST_COMODITY = "GET_LIST_COMODITY";
+export const UPDATE_COMODITY = "UPDATE_COMODITY";
+export const REMOVE_COMODITY = "REMOVE_COMODITY";
+
+// * Supplier
+export const GET_LIST_SUPPLIER = "GET_LIST_SUPPLIER";
+export const UPDATE_SUPPLIER = "UPDATE_SUPPLIER";
+export const ADD_NEW_SUPPLIER = "ADD_NEW_SUPPLIER";
+export const REMOVE_SUPPLIER = "REMOVE_SUPPLIER";
+
+// * Invoice Issues
+export const GET_LIST_INVOICE_ISSUES = "GET_LIST_INVOICE_ISSUES";
+export const ADD_NEW_INVOICES_ISSUES = "ADD_NEW_INVOICE_ISSUES";
+export const IMPORT_STORE = "IMPORT_STORE";

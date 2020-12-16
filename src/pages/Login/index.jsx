@@ -1,6 +1,6 @@
+import React from "react";
 import { Button, Form as AntForm, message, Space } from "antd";
 import { FastField, Formik } from "formik";
-import React from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import { accountLogin } from "../../actions/accountAction";

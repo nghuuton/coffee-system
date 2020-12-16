@@ -1,4 +1,4 @@
-import AccountApi from "../api/accountApi";
+import AccountApi from "../api/AccountApi";
 import { ACCOUNT_AUTH, ACCOUNT_LOGIN, ACCOUNT_LOGOUT } from "./types";
 
 export function accountLogin(data) {

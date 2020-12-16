@@ -6,7 +6,9 @@ import {
     decrementProduct,
     deleteProduct,
     incrementProduct,
+    removeTab,
 } from "../../actions/tabActions";
+import { getListTable } from "../../actions/tableActions";
 import { caculatorTotal, total } from "../../utils/formatNumber";
 import ButtonGroupBill from "../Button_Group_Bill";
 import Payment from "../Payment";
@@ -14,7 +16,7 @@ import ProductInTabContent from "../Product_In_TabContent";
 
 const { Option } = Select;
 
-const TabContent = ({ pane, socket }) => {
+const TabContent = ({ pane, socket, remove }) => {
     const dispatch = useDispatch();
     const { listTable } = useSelector((state) => state.tables);
     const { panes, activeKey } = useSelector((state) => state.tabs);
@@ -45,12 +47,14 @@ const TabContent = ({ pane, socket }) => {
     };
 
     const caculator = () => {
-        const newPayment = total(product) - (percent / 100) * total(product);
+        const totalProduct = pane.totalPayment ? pane.totalPayment : total(product);
+        const newPayment = totalProduct - (percent / 100) * totalProduct;
         return newPayment;
     };
 
     const moneyPay = () => {
-        const result = payment * 1000 - caculator();
+        const intoMoney = pane.intoMoney ? pane.intoMoney : caculator();
+        const result = payment * 1000 - intoMoney;
         return result;
     };
 
@@ -77,6 +81,31 @@ const TabContent = ({ pane, socket }) => {
                 right: "-80vh",
             },
         });
+    };
+
+    const requirementPay = (pane) => {
+        const userId = accountDetail.staff.account._id;
+        socket.emit("NOTIFICATION_THU_NGAN", {
+            pane,
+            userId,
+            moneyPay: moneyPay(),
+            payment: payment,
+        });
+        message.success({
+            content: "Thông báo thu ngân thành công",
+            style: {
+                position: "relative",
+                top: 10,
+                right: "-80vh",
+            },
+        });
+        message.config({ maxCount: 1 });
+    };
+
+    const paymentSuccess = (pane) => {
+        remove(pane.table._id);
+        dispatch(getListTable("Tất cả"));
+        socket.emit("PAYMENT_SUCCESS", { pane, userId: pane.userId });
     };
 
     // * Modal
@@ -138,12 +167,15 @@ const TabContent = ({ pane, socket }) => {
             <ButtonGroupBill
                 pane={pane}
                 notificationTo={notificationTo}
+                requirementPay={requirementPay}
+                paymentSuccess={paymentSuccess}
                 showModal={showModal}
             />
             <Payment
                 pane={pane}
                 product={product}
                 total={total}
+                payment={payment}
                 caculator={caculator}
                 moneyPay={moneyPay}
                 percent={percent}

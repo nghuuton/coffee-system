@@ -1,14 +1,36 @@
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Button, message } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getInvoiceProduct } from "../../actions/invoiceAction";
+import { deleteRequirement, getInvoiceProduct } from "../../actions/invoiceAction";
 
-const LeftKitchen = ({ socket, requireMent }) => {
+const LeftKitchen = ({ socket }) => {
     const dispatch = useDispatch();
+    const [requireMent, setRequireMent] = useState([]);
+
+    const remove = (tableId) => {
+        const newRequirement = requireMent.filter((item) => item.table._id !== tableId);
+        dispatch(deleteRequirement());
+        setRequireMent(newRequirement);
+    };
+
+    useEffect(() => {
+        if (!socket) return;
+        socket.on("JOIN_ROOM_SUCCESS", (data) => {});
+        socket.on("NOTIFICATION_SUCCESS", (data) => {
+            const requirementOf = requireMent.find(
+                (item) => item.table._id === data.table._id
+            );
+            if (!requirementOf) {
+                setRequireMent([...requireMent, data]);
+                dispatch(getInvoiceProduct(data.products));
+            }
+        });
+    }, [socket, requireMent]);
+
     const sendToStaff = (id, item) => {
         socket.emit("SEND_TO_STAFF", { id, item });
-        console.log(item);
+        remove(item.table._id);
         message.success({
             content: `Thông báo cho nhân viên thành công`,
             style: {
@@ -26,13 +48,9 @@ const LeftKitchen = ({ socket, requireMent }) => {
                 <p>Yêu cầu</p>
             </div>
             {requireMent.map((item) => (
-                <div
-                    className="wrapper_kitchen"
-                    key={item.table._id}
-                    onClick={() => dispatch(getInvoiceProduct(item.products))}
-                >
+                <div className="wrapper_kitchen" key={item.table._id}>
                     <div className="donhang">
-                        <p>
+                        <p onClick={() => dispatch(getInvoiceProduct(item.products))}>
                             Yêu cầu của bàn: {item.table.name}
                             <br />
                             Thời gian: {result}

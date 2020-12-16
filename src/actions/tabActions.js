@@ -8,6 +8,7 @@ import {
     GET_INVOICE_NOT_PAYMENT,
     INCREMENT_PRODUCT,
     REMOVE_TAB,
+    REQUIREMENT_PAYMENT,
 } from "./types";
 
 export function addNewTab(name, table, data) {
@@ -95,5 +96,12 @@ export function getInvoice() {
     return {
         type: GET_INVOICE_NOT_PAYMENT,
         payload: request,
+    };
+}
+
+export function requirePayment(tableId, moneyPay, payment, userId) {
+    return {
+        type: REQUIREMENT_PAYMENT,
+        payload: { tableId, moneyPay, payment, userId },
     };
 }

@@ -7,6 +7,7 @@ import {
     GET_INVOICE_NOT_PAYMENT,
     INCREMENT_PRODUCT,
     REMOVE_TAB,
+    REQUIREMENT_PAYMENT,
 } from "../actions/types";
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -131,7 +132,23 @@ export default function (state = { panes: [] }, action) {
                 panes: newPanes,
                 activeKey: newPanes.length !== 0 ? newPanes[0].table._id : "",
             };
-
+        case REQUIREMENT_PAYMENT:
+            return {
+                ...state,
+                panes: [
+                    ...state.panes.map((item) =>
+                        item.table._id !== action.payload.tableId
+                            ? { ...item }
+                            : {
+                                  ...item,
+                                  status: true,
+                                  moneyPay: action.payload.moneyPay,
+                                  payment: action.payload.payment,
+                                  userId: action.payload.userId,
+                              }
+                    ),
+                ],
+            };
         default:
             return state;
     }
