@@ -8,13 +8,14 @@ import {
     INCREMENT_PRODUCT,
     REMOVE_TAB,
     REQUIREMENT_PAYMENT,
+    UPDATE_STATUS_KITCHEN_TAB,
 } from "../actions/types";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (state = { panes: [] }, action) {
     switch (action.type) {
         case ADD_NEW_TAB:
-            return { ...state, panes: [...state.panes, action.payload] };
+            return { ...state, panes: [{ ...action.payload, statusKitchen: true }] };
         case REMOVE_TAB:
             return { ...state, panes: action.payload };
         case CHANGE_TAB_TABLE:
@@ -32,6 +33,7 @@ export default function (state = { panes: [] }, action) {
                     ...state.panes.slice(0, idx),
                     {
                         ...result,
+                        statusKitchen: false,
                         content: [
                             ...result.content,
                             { ...action.payload.product, quantity: 1 },
@@ -59,6 +61,7 @@ export default function (state = { panes: [] }, action) {
                     ...state.panes.slice(0, indexPane),
                     {
                         ...pane,
+                        statusKitchen: false,
                         content: [...newContent],
                     },
                     ...state.panes.slice(indexPane + 1),
@@ -148,6 +151,15 @@ export default function (state = { panes: [] }, action) {
                               }
                     ),
                 ],
+            };
+        case UPDATE_STATUS_KITCHEN_TAB:
+            return {
+                ...state,
+                panes: state.panes.map((item) =>
+                    item.table._id === action.payload
+                        ? { ...item, statusKitchen: true }
+                        : { ...item }
+                ),
             };
         default:
             return state;

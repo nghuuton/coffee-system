@@ -1,4 +1,4 @@
-import { Button, Form as AntForm } from "antd";
+import { Button, Form as AntForm, message } from "antd";
 import { FastField, Formik } from "formik";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -25,6 +25,14 @@ const FormSupplierAdd = ({ setVisible }) => {
 
     const onSubmit = (values, formAction) => {
         setVisible(false);
+        message.success({
+            content: `Thêm thành công`,
+            style: {
+                position: "relative",
+                top: 10,
+                right: "-80vh",
+            },
+        });
         dispatch(createNewSupplier(values));
         formAction.resetForm();
         formAction.setSubmitting(false);

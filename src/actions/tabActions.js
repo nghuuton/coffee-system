@@ -9,6 +9,7 @@ import {
     INCREMENT_PRODUCT,
     REMOVE_TAB,
     REQUIREMENT_PAYMENT,
+    UPDATE_STATUS_KITCHEN_TAB,
 } from "./types";
 
 export function addNewTab(name, table, data) {
@@ -103,5 +104,12 @@ export function requirePayment(tableId, moneyPay, payment, userId) {
     return {
         type: REQUIREMENT_PAYMENT,
         payload: { tableId, moneyPay, payment, userId },
+    };
+}
+
+export function updateStatusKitchenTab(paneId) {
+    return {
+        type: UPDATE_STATUS_KITCHEN_TAB,
+        payload: paneId,
     };
 }

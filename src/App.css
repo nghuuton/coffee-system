@@ -533,3 +533,12 @@
     bottom: -32px;
     right: 0px;
 }
+
+.type {
+    width: 170px;
+}
+
+.input_date {
+    width: 200px;
+    margin-left: 28px;
+}

@@ -6,9 +6,9 @@ import {
     decrementProduct,
     deleteProduct,
     incrementProduct,
-    removeTab,
+    updateStatusKitchenTab,
 } from "../../actions/tabActions";
-import { getListTable } from "../../actions/tableActions";
+import { updateStatusTable } from "../../actions/tableActions";
 import { caculatorTotal, total } from "../../utils/formatNumber";
 import ButtonGroupBill from "../Button_Group_Bill";
 import Payment from "../Payment";
@@ -81,6 +81,7 @@ const TabContent = ({ pane, socket, remove }) => {
                 right: "-80vh",
             },
         });
+        dispatch(updateStatusKitchenTab(pane.table._id));
     };
 
     const requirementPay = (pane) => {
@@ -104,7 +105,7 @@ const TabContent = ({ pane, socket, remove }) => {
 
     const paymentSuccess = (pane) => {
         remove(pane.table._id);
-        dispatch(getListTable("Tất cả"));
+        dispatch(updateStatusTable(pane.table._id));
         socket.emit("PAYMENT_SUCCESS", { pane, userId: pane.userId });
     };
 

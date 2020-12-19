@@ -1,4 +1,4 @@
-import { Button, Form as AntForm } from "antd";
+import { Button, Form as AntForm, message } from "antd";
 import { FastField, Formik } from "formik";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -16,6 +16,14 @@ const FormComodityEdit = ({ comodity, setVisible }) => {
     const onSubmit = (values, formAction) => {
         const unitId = comodity.unit && comodity.unit._id;
         dispatch(updateComodity({ ...values, unitId }, comodity._id));
+        message.success({
+            content: `Cập nhật thành công`,
+            style: {
+                position: "relative",
+                top: 10,
+                right: "-80vh",
+            },
+        });
         setVisible(false);
         formAction.setSubmitting(false);
     };

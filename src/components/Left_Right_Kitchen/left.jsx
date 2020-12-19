@@ -42,6 +42,7 @@ const LeftKitchen = ({ socket }) => {
     };
     const now = new Date();
     const result = `${now.getHours()}:${now.getMinutes()}`;
+    console.log(requireMent);
     return (
         <div className="sidebar_left">
             <div className="header">

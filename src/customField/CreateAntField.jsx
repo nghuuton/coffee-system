@@ -49,7 +49,7 @@ const CreateAntField = (AntComponent) => ({
                                     `${field.name}`,
                                     event.currentTarget.files[0]
                                 );
-                                btnSubmit.current.click();
+                                btnSubmit && btnSubmit.current.click();
                             }}
                             ref={inputFile}
                             style={{ display: "none" }}

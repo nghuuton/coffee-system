@@ -24,7 +24,7 @@ const TableComodity = ({ listComodity, showModal, deleteComodity }) => {
                 key="quantity"
                 render={(item) => {
                     return item && item.unit && item.unit.unit !== null ? (
-                        <span>{item.unit.unit * item.quantity}</span>
+                        <span>{Math.floor(item.unit.unit * item.quantity)}</span>
                     ) : (
                         <span>{item.quantity}</span>
                     );

@@ -1,4 +1,4 @@
-import { Button, Form as AntForm } from "antd";
+import { Button, Form as AntForm, message } from "antd";
 import { FastField, Formik } from "formik";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -26,6 +26,14 @@ const FormProductAdd = ({ listType, listComodity, setVisible, typeModel }) => {
 
     const onSubmit = (values, formAction) => {
         dispatch(addNewProduct(values));
+        message.success({
+            content: `Thêm thành công`,
+            style: {
+                position: "relative",
+                top: 10,
+                right: "-80vh",
+            },
+        });
         setVisible(false);
         formAction.resetForm();
         formAction.setSubmitting(false);

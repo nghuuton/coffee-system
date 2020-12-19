@@ -1,5 +1,5 @@
 import { CloseOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Form as AntForm } from "antd";
+import { Button, Form as AntForm, message } from "antd";
 import { FastField, FieldArray, Formik } from "formik";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -30,6 +30,14 @@ const FormInvoiceAdd = ({ typeModel, byStaff, setVisible }) => {
     const onSubmit = (values, formAction) => {
         dispatch(createNewInvoiceIssues(values));
         setVisible(false);
+        message.success({
+            content: `Tạo hoá đơn nhập thành công`,
+            style: {
+                position: "relative",
+                top: 10,
+                right: "-80vh",
+            },
+        });
         formAction.resetForm();
         formAction.setSubmitting(false);
     };

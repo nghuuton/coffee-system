@@ -7,6 +7,7 @@ import {
     getInvoice,
     removeTab,
     requirePayment,
+    updateStatusKitchenTab,
 } from "../../actions/tabActions";
 import { getListTable } from "../../actions/tableActions";
 import TabContent from "../TabContent";
@@ -75,17 +76,6 @@ const TabsHoaDon = () => {
         ) {
             socket.emit("JOIN_ROOM_THUNGAN");
         }
-        socket.on("LISTEN_NOTIFICATION_FROM_KITCHEN", (data) => {
-            message.success({
-                content: `${data.table.name} đã xong`,
-                style: {
-                    position: "relative",
-                    top: 10,
-                    right: "-80vh",
-                },
-            });
-            message.config({ maxCount: 1 });
-        });
 
         socket.on("NOTIFICATION_THU_NGAN_SUCCESS", (data) => {
             dispatch(
@@ -98,6 +88,19 @@ const TabsHoaDon = () => {
             );
             message.success({
                 content: `${data.pane.table.name} yêu cầu thanh toán`,
+                style: {
+                    position: "relative",
+                    top: 10,
+                    right: "-80vh",
+                },
+            });
+            message.config({ maxCount: 1 });
+        });
+
+        socket.on("LISTEN_NOTIFICATION_FROM_KITCHEN", (data) => {
+            dispatch(updateStatusKitchenTab(data.table._id));
+            message.success({
+                content: `${data.table.name} đã xong`,
                 style: {
                     position: "relative",
                     top: 10,

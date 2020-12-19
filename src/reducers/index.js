@@ -8,6 +8,7 @@ import types from "./typeReducer";
 import comoditys from "./comodityReducer";
 import supplier from "./supplierReducer";
 import invoiceissues from "./invoiceIssuesReducer";
+import staff from "./staffReducer";
 
 const rootReducer = combineReducers({
     tabs,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     comoditys,
     supplier,
     invoiceissues,
+    staff,
 });
 
 export default rootReducer;
