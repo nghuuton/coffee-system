@@ -6,10 +6,17 @@ import * as Yup from "yup";
 import { addNewProduct } from "../../actions/productAction";
 import { AntInput, AntSelect, UploadFile } from "../../customField/CreateAntField";
 
-const FormProductAdd = ({ listType, listComodity, setVisible, typeModel }) => {
+const FormProductAdd = ({
+    listType,
+    listComodity,
+    setVisible,
+    typeModel,
+    listProduct,
+}) => {
     const [form] = AntForm.useForm();
     const dispatch = useDispatch();
-
+    const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
+    const NULL_FILE = null;
     const initialValues = {
         name: "",
         image: null,
@@ -19,12 +26,36 @@ const FormProductAdd = ({ listType, listComodity, setVisible, typeModel }) => {
     };
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required("Name is required."),
-        price: Yup.number().required("Price is required."),
-        comoditys: Yup.array("").required("Comoditys is required."),
+        name: Yup.string().required("Tên món không được bỏ trống"),
+        price: Yup.number()
+            .required("Giá không được bỏ trống")
+            .min(1000, "Nhỏ nhất là 1000"),
+        comoditys: Yup.array("")
+            .required("Hàng hóa không được bỏ trống")
+            .min(1, "Tối thiểu ít nhất 1 hàng hóa"),
+        image: Yup.mixed().test("fileFormat", "Không đúng định dạng file", (value) =>
+            value === null ? NULL_FILE === null : SUPPORTED_FORMATS.includes(value.type)
+        ),
     });
 
+    // TODO Thêm món
+
     const onSubmit = (values, formAction) => {
+        const productExist = listProduct.find(
+            (item) => item.name.toLowerCase() === values.name.toLowerCase()
+        );
+        if (productExist) {
+            formAction.setSubmitting(false);
+            return message.error({
+                content: `Sản phẩm đã tồn tại`,
+                style: {
+                    position: "relative",
+                    top: 10,
+                    right: "-80vh",
+                },
+            });
+        }
+
         dispatch(addNewProduct(values));
         message.success({
             content: `Thêm thành công`,

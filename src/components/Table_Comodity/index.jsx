@@ -1,4 +1,4 @@
-import { Button, notification, Table } from "antd";
+import { Button, message, notification, Table } from "antd";
 import Column from "antd/lib/table/Column";
 import React from "react";
 import { formatMoney } from "../../utils/formatNumber";
@@ -58,8 +58,9 @@ const TableComodity = ({ listComodity, showModal, deleteComodity }) => {
                         <Button
                             type="primary"
                             danger
-                            onClick={() =>
-                                notification["error"]({
+                            onClick={() => {
+                                message.destroy();
+                                return notification["error"]({
                                     key: `${_id}`,
                                     message: "Bạn có đồng ý xoá",
                                     btn: (
@@ -74,14 +75,16 @@ const TableComodity = ({ listComodity, showModal, deleteComodity }) => {
                                             Xác nhận
                                         </Button>
                                     ),
-                                })
-                            }
+                                });
+                            }}
                         >
                             Xoá
                         </Button>
                         <Button
                             type="primary"
-                            onClick={() => showModal("Cập nhật hàng hoá", _id)}
+                            onClick={() => {
+                                showModal("Cập nhật hàng hoá", _id);
+                            }}
                         >
                             Cập nhật
                         </Button>

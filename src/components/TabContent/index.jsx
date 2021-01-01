@@ -1,11 +1,12 @@
-import { message, Select } from "antd";
-import Modal from "antd/lib/modal/Modal";
+import { message } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     decrementProduct,
     deleteProduct,
+    enableStatusNoteProduct,
     incrementProduct,
+    noteProduct,
     updateStatusKitchenTab,
 } from "../../actions/tabActions";
 import { updateStatusTable } from "../../actions/tableActions";
@@ -14,23 +15,13 @@ import ButtonGroupBill from "../Button_Group_Bill";
 import Payment from "../Payment";
 import ProductInTabContent from "../Product_In_TabContent";
 
-const { Option } = Select;
-
-const TabContent = ({ pane, socket, remove }) => {
+const TabContent = ({ pane, socket, remove, changeStatusTable }) => {
     const dispatch = useDispatch();
-    const { listTable } = useSelector((state) => state.tables);
     const { panes, activeKey } = useSelector((state) => state.tabs);
     const { content: product } = panes.find((item) => item.title === pane.title);
     const { accountDetail } = useSelector((state) => state.account);
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [percent, setPercent] = useState("");
     const [payment, setPayment] = useState("");
-    const [tables, setTables] = useState([]);
-
-    const newListTable =
-        listTable &&
-        listTable.filter((item) => item._id !== activeKey && item.status === "Trống");
 
     const incrementQuantity = (p, activeKey) => {
         dispatch(incrementProduct(p, activeKey));
@@ -47,19 +38,19 @@ const TabContent = ({ pane, socket, remove }) => {
     };
 
     const caculator = () => {
-        const totalProduct = pane.totalPayment ? pane.totalPayment : total(product);
-        const newPayment = totalProduct - (percent / 100) * totalProduct;
-        return newPayment;
+        const totalProduct = total(product);
+        return totalProduct;
     };
 
     const moneyPay = () => {
-        const intoMoney = pane.intoMoney ? pane.intoMoney : caculator();
+        const intoMoney = caculator();
         const result = payment * 1000 - intoMoney;
         return result;
     };
 
-    // * Emit to Bartender
+    // TODO Thông báo tới bếp
     const notificationTo = (pane) => {
+        message.destroy();
         const userId = accountDetail.staff.account._id;
         const createBy = accountDetail.staff._id;
         const table = pane.table;
@@ -84,13 +75,17 @@ const TabContent = ({ pane, socket, remove }) => {
         dispatch(updateStatusKitchenTab(pane.table._id));
     };
 
+    // TODO Thông báo tới thu ngân
+
     const requirementPay = (pane) => {
+        message.destroy();
         const userId = accountDetail.staff.account._id;
         socket.emit("NOTIFICATION_THU_NGAN", {
             pane,
             userId,
             moneyPay: moneyPay(),
             payment: payment,
+            intoMoney: caculator(),
         });
         message.success({
             content: "Thông báo thu ngân thành công",
@@ -100,33 +95,45 @@ const TabContent = ({ pane, socket, remove }) => {
                 right: "-80vh",
             },
         });
-        message.config({ maxCount: 1 });
     };
 
+    // TODO Thu ngân thanh toán
+
     const paymentSuccess = (pane) => {
+        if (pane.content.length === 0) {
+            return message.error({
+                content: "Không có gì để thanh toán",
+                style: {
+                    position: "relative",
+                    top: 10,
+                    right: "-80vh",
+                },
+            });
+        }
         remove(pane.table._id);
         dispatch(updateStatusTable(pane.table._id));
         socket.emit("PAYMENT_SUCCESS", { pane, userId: pane.userId });
     };
 
-    // * Modal
-    const showModal = () => {
-        setIsModalVisible(true);
+    // TODO Note Product
+    const handleNote = (value, item) => {
+        dispatch(
+            noteProduct({ ...item, note: value, noteStatus: false }, pane.table._id)
+        );
     };
 
-    const handleOk = () => {
-        setIsModalVisible(false);
+    const handleChangeNote = (event, item) => {
+        dispatch(
+            noteProduct(
+                { ...item, note: event.currentTarget.value, noteStatus: true },
+                pane.table._id
+            )
+        );
     };
 
-    const handleCancel = () => {
-        setIsModalVisible(false);
+    const showNoteProduct = (item) => {
+        dispatch(enableStatusNoteProduct({ ...item, noteStatus: true }, pane.table._id));
     };
-
-    // * Modal handleChange Option
-
-    function handleChange(value) {
-        setTables(value);
-    }
 
     return (
         <div className="tabs_bill">
@@ -139,38 +146,17 @@ const TabContent = ({ pane, socket, remove }) => {
                     decrementQuantity={decrementQuantity}
                     caculatorTotal={caculatorTotal}
                     removeProduct={removeProduct}
+                    handleNote={handleNote}
+                    showNoteProduct={showNoteProduct}
+                    handleChangeNote={handleChangeNote}
                 />
             ))}
-            <Modal
-                title="Ghép bàn"
-                visible={isModalVisible}
-                onOk={() => handleOk()}
-                onCancel={handleCancel}
-            >
-                <Select
-                    mode="multiple"
-                    style={{ width: "100%" }}
-                    placeholder="Chọn bàn cần ghép"
-                    onChange={handleChange}
-                    value={tables}
-                    optionLabelProp="label"
-                >
-                    {newListTable &&
-                        newListTable.map((item) => (
-                            <Option value={item._id} label={item.name} key={item._id}>
-                                <div className="demo-option-label-item">
-                                    <span role="img">{item.name}</span>
-                                </div>
-                            </Option>
-                        ))}
-                </Select>
-            </Modal>
             <ButtonGroupBill
                 pane={pane}
                 notificationTo={notificationTo}
                 requirementPay={requirementPay}
                 paymentSuccess={paymentSuccess}
-                showModal={showModal}
+                changeStatusTable={changeStatusTable}
             />
             <Payment
                 pane={pane}
@@ -179,8 +165,6 @@ const TabContent = ({ pane, socket, remove }) => {
                 payment={payment}
                 caculator={caculator}
                 moneyPay={moneyPay}
-                percent={percent}
-                setPercent={setPercent}
                 setPayment={setPayment}
             />
         </div>

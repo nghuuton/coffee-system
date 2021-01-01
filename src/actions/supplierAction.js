@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import SupplierApi from "../api/SupplierApi";
 import {
     ADD_NEW_SUPPLIER,

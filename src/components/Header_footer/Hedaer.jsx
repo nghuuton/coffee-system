@@ -1,18 +1,19 @@
-import { Button, Dropdown, Input, Layout, Menu } from "antd";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
-    UngroupOutlined,
     CoffeeOutlined,
-    UserOutlined,
+    DollarCircleOutlined,
     DownOutlined,
     ExportOutlined,
-    InfoCircleOutlined,
     InboxOutlined,
+    InfoCircleOutlined,
     LineChartOutlined,
+    UngroupOutlined,
+    UserOutlined,
 } from "@ant-design/icons";
+import { Button, Dropdown, Layout, Menu } from "antd";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
 import { accountLogout } from "../../actions/accountAction";
 
 const { Header } = Layout;
@@ -20,12 +21,30 @@ const { Header } = Layout;
 const HeaderSystem = (props) => {
     const dispatch = useDispatch();
     const { accountDetail } = useSelector((state) => state.account);
-
+    const [defaultSelectedKeys, setDefaultSelectedKeys] = useState(["1"]);
     async function logOut(e) {
         localStorage.removeItem("token");
         await dispatch(accountLogout());
         props.history.push("/login");
     }
+
+    const handleClick = (e) => {
+        setDefaultSelectedKeys([e.key]);
+    };
+
+    useEffect(() => {
+        document.addEventListener("keydown", (event) => {
+            if (event.keyCode === 112) {
+                props.history.push("/coffee");
+                setDefaultSelectedKeys(["1"]);
+            }
+            if (event.keyCode === 113) {
+                props.history.push("/coffee/menu");
+                setDefaultSelectedKeys(["2"]);
+            }
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const menuAction = [
         { title: "Thông tin", icon: <InfoCircleOutlined />, action: "", type: "public" },
@@ -54,9 +73,9 @@ const HeaderSystem = (props) => {
             type: [2],
         },
         {
-            title: "Quản lý bàn",
-            icon: <UngroupOutlined />,
-            action: () => props.history.push("/admin/table"),
+            title: "Quản lý hóa đơn",
+            icon: <DollarCircleOutlined />,
+            action: () => props.history.push("/admin/invoice"),
             type: [0, 1],
         },
         { title: "Đăng xuất", icon: <ExportOutlined />, action: logOut, type: "public" },
@@ -84,25 +103,31 @@ const HeaderSystem = (props) => {
 
     return (
         <Header className="header">
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]}>
+            <Menu
+                theme="dark"
+                mode="horizontal"
+                onClick={handleClick}
+                defaultSelectedKeys={defaultSelectedKeys}
+                selectedKeys={defaultSelectedKeys}
+            >
                 <Menu.Item key="1">
                     <Link to="/coffee">
                         <UngroupOutlined />
-                        Bàn
+                        Bàn (F1)
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="2">
                     <Link to="/coffee/menu">
                         <CoffeeOutlined />
-                        Thực Đơn
+                        Thực Đơn (F2)
                     </Link>
                 </Menu.Item>
             </Menu>
-            <Input
+            {/* <Input
                 placeholder="Tìm kiếm sản phẩm"
                 onChange={(e) => console.log(e.target.value)}
                 className="input_search"
-            />
+            /> */}
             <Dropdown overlay={menu} className="account_dropdown">
                 <Button>
                     <UserOutlined />{" "}

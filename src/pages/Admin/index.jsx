@@ -6,7 +6,7 @@ import AdminDashboard from "../Admin_Dashboard";
 import AdminMenu from "../Menu_Admin";
 import AdminStore from "../Store_Admin";
 import AdminUser from "../User_Admin";
-
+import AdminInvoice from "../Invoice_Admin";
 function AdminRoute() {
     const match = useRouteMatch();
     return (
@@ -16,6 +16,10 @@ function AdminRoute() {
                 <Route path={`${match.url}/menu`} component={Auth(AdminMenu, true)} />
                 <Route path={`${match.url}/store`} component={Auth(AdminStore, true)} />
                 <Route path={`${match.url}/user`} component={Auth(AdminUser, true)} />
+                <Route
+                    path={`${match.url}/invoice`}
+                    component={Auth(AdminInvoice, true)}
+                />
             </Switch>
         </LayoutSystemAdmin>
     );

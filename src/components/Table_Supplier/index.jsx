@@ -1,4 +1,4 @@
-import { Button, notification, Table } from "antd";
+import { Button, message, notification, Table } from "antd";
 import Column from "antd/lib/table/Column";
 import React from "react";
 
@@ -29,8 +29,9 @@ const TableSupplier = ({ listSupplier, showModal, removeSup }) => {
                         <Button
                             type="primary"
                             danger
-                            onClick={() =>
-                                notification["error"]({
+                            onClick={() => {
+                                message.destroy();
+                                return notification["error"]({
                                     key: `${_id}`,
                                     message: "Bạn có đồng ý xoá",
                                     btn: (
@@ -45,8 +46,8 @@ const TableSupplier = ({ listSupplier, showModal, removeSup }) => {
                                             Xác nhận
                                         </Button>
                                     ),
-                                })
-                            }
+                                });
+                            }}
                         >
                             Xoá
                         </Button>

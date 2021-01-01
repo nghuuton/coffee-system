@@ -1,8 +1,7 @@
-import { Button, notification, Table, Tag } from "antd";
+import { Button, Table, Tag } from "antd";
 import Column from "antd/lib/table/Column";
-import React from "react";
-
 import moment from "moment";
+import React from "react";
 import { formatMoney } from "../../utils/formatNumber";
 
 const TableInvoice = ({ listInvoiceIssues, importStoreInvoice }) => {
@@ -74,32 +73,12 @@ const TableInvoice = ({ listInvoiceIssues, importStoreInvoice }) => {
                 key="_id"
                 render={(item) => (
                     <div className="button_group">
+                        <Button type="dashed">In</Button>
                         <Button
                             type="primary"
-                            danger
-                            onClick={() =>
-                                notification["error"]({
-                                    key: `${item._id}`,
-                                    message: "Bạn có đồng ý xoá",
-                                    btn: (
-                                        <Button
-                                            type="primary"
-                                            size="small"
-                                            onClick={() => {
-                                                notification.close(item._id);
-                                            }}
-                                        >
-                                            Xác nhận
-                                        </Button>
-                                    ),
-                                })
-                            }
-                        >
-                            Xoá
-                        </Button>
-                        <Button
-                            type="primary"
-                            onClick={() => importStoreInvoice(item._id)}
+                            onClick={() => {
+                                importStoreInvoice(item._id);
+                            }}
                             disabled={item.status}
                         >
                             Nhập kho

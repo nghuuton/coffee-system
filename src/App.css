@@ -135,7 +135,7 @@
 
 .tab_content .tab_content__item .tab__content__item__title span:nth-child(1) {
     display: flex;
-    flex-flow: column wrap;
+    /* flex-flow: column wrap; */
     font-weight: 500;
     font-size: larger;
 }
@@ -411,6 +411,7 @@
 
 .product_item .product_item__name {
     margin-left: 10px;
+    width: 100px;
 }
 
 .product_item .product_item__quantity {
@@ -421,6 +422,10 @@
 .procuct__image__requirement {
     margin-left: 5px;
     width: 64px;
+}
+
+.product_item .product_item__note {
+    color: red;
 }
 
 .logo {
@@ -521,9 +526,6 @@
     flex-flow: row;
 }
 
-.input_comodity input {
-}
-
 .input_comodity .input_comodity__btn_remove {
     width: 40px;
 }
@@ -541,4 +543,18 @@
 .input_date {
     width: 200px;
     margin-left: 28px;
+}
+
+.errorMessage {
+    width: 180px;
+    position: relative;
+    top: -28px;
+    right: -100px;
+}
+
+.tab__content__item__title .tab__content__item__title__note__input {
+    display: flex;
+    height: 24px;
+    width: 100px;
+    flex-flow: row;
 }

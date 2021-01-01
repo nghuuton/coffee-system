@@ -29,11 +29,29 @@ const FormAddUser = ({ setVisible }) => {
         birthday: moment(Date.now()),
     };
     const validationSchema = Yup.object().shape({
-        firstname: Yup.string().required("Firstname is required.").min(8).max(18),
-        lastname: Yup.string().required("Lastname is required.").min(2).max(5),
-        email: Yup.string().required("Email is required").email("Must be an email"),
-        password: Yup.string().required("Password is required."),
+        firstname: Yup.string()
+            .required("Họ không được bỏ trống.")
+            .min(8, "Tối thiểu 8 kí tự trở lên.")
+            .max(18, "Tối đa 18 kí tự.")
+            .matches(
+                /^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$/,
+                "Không được có số."
+            ),
+        lastname: Yup.string()
+            .required("Tên kkhông được bỏ trống.")
+            .min(2, "Tối thiểu 2 kí tự trở lên.")
+            .max(5, "Tốida 5 kí tự.")
+            .matches(
+                /^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$/,
+                "Không được có số."
+            ),
+        email: Yup.string()
+            .required("Email không được bỏ trống.")
+            .email("Không đúng định dạng email."),
+        password: Yup.string().required("Password không được bỏ trống."),
     });
+
+    // TODO Thêm người dùng
 
     const onSubmit = (values, formAction) => {
         dispatch(createNewUser(values))

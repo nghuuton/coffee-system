@@ -6,21 +6,53 @@ import * as Yup from "yup";
 import { upDateProduct } from "../../actions/productAction";
 import { AntInput, AntSelect, UploadFile } from "../../customField/CreateAntField";
 
-const FormProductEdit = ({ product, listType, listComodity, setVisible, typeModel }) => {
+const FormProductEdit = ({
+    product,
+    listType,
+    listComodity,
+    setVisible,
+    typeModel,
+    listProduct,
+}) => {
     const [form] = AntForm.useForm();
     const dispatch = useDispatch();
     const initialValues = product;
+    const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
+    const NULL_FILE = null;
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required("Name is required."),
-        price: Yup.number().required("Price is required."),
+        name: Yup.string().required("Tên món không được bỏ trống."),
+        price: Yup.number()
+            .required("Giá không được bỏ trống.")
+            .min(1000, "Tối thiểu ít nhất 1000"),
         comoditys: Yup.array("")
-            .required("Comoditys is required.")
-            .min(1, "Comoditys is required."),
+            .required("Hàng hóa không được bỏ trống.")
+            .min(1, "Tối thiểu ít nhất một hàng hóa."),
+        image: Yup.mixed().test("fileFormat", "Không đúng định dạng file", (value) =>
+            value === null ? NULL_FILE === null : SUPPORTED_FORMATS.includes(value.type)
+        ),
     });
 
+    // TODO Cập nhật món
+
     const onSubmit = (values, formAction) => {
+        const newListProduct = listProduct.filter((item) => item._id !== product._id);
+        const productExits = newListProduct.find(
+            (item) => item.name.toLowerCase() === values.name.toLowerCase()
+        );
+        if (productExits) {
+            formAction.setSubmitting(false);
+            return message.error({
+                content: `Sản phẩm đã tồn tại`,
+                style: {
+                    position: "relative",
+                    top: 10,
+                    right: "-80vh",
+                },
+            });
+        }
         dispatch(upDateProduct(product._id, values));
+
         message.success({
             content: `Cập nhật thành công`,
             style: {
@@ -31,6 +63,7 @@ const FormProductEdit = ({ product, listType, listComodity, setVisible, typeMode
         });
         setVisible(false);
         formAction.setSubmitting(false);
+        formAction.resetForm();
     };
 
     return (

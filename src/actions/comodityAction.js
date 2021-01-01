@@ -18,6 +18,7 @@ export function updateComodity(values, id) {
 }
 
 export function removeComodity(id) {
+    // eslint-disable-next-line no-unused-vars
     const request = ComodityApi.removeComodity(id);
     return {
         type: REMOVE_COMODITY,

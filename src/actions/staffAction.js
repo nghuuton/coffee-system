@@ -1,5 +1,11 @@
 import StaffApi from "../api/StaffApi";
-import { CREATE_NEW_USER, GET_LIST_USER, REMOVE_USER, UPDATE_TYPE_USER } from "./types";
+import {
+    CREATE_NEW_USER,
+    GET_LIST_USER,
+    REMOVE_USER,
+    UPDATE_STATUS_USER,
+    UPDATE_TYPE_USER,
+} from "./types";
 
 export function getListUser() {
     const request = StaffApi.getListStaff();
@@ -29,6 +35,14 @@ export function deleteUser(id) {
     const request = StaffApi.removeUser(id);
     return {
         type: REMOVE_USER,
-        payload: id,
+        payload: request,
+    };
+}
+
+export function updateStatusUser(id) {
+    const request = StaffApi.updateStatus(id);
+    return {
+        type: UPDATE_STATUS_USER,
+        payload: request,
     };
 }

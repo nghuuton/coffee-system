@@ -5,7 +5,6 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import { createNewInvoiceIssues } from "../../actions/invoiceIssuesAction";
-import InvoiceIssuesApi from "../../api/InvoiceIssuesApi";
 import { AntInput } from "../../customField/CreateAntField";
 
 const FormInvoiceAdd = ({ typeModel, byStaff, setVisible }) => {
@@ -21,11 +20,41 @@ const FormInvoiceAdd = ({ typeModel, byStaff, setVisible }) => {
     };
 
     const validationSchema = Yup.object().shape({
-        bySupplier: Yup.string().required("Supplier is required."),
-        comoditys: Yup.array()
-            .required("Comoditys is required.")
-            .min(1, "Comoditys is required."),
+        bySupplier: Yup.string().required("Tên nhà cung cấp không được bỏ trống"),
+        comoditys: Yup.lazy((val) =>
+            Array.isArray(val)
+                ? Yup.array().of(Yup.string().required("Comoditys is required."))
+                : Yup.string().required("Comoditys is required.")
+        ),
+        price: Yup.lazy((val) =>
+            Array.isArray(val)
+                ? Yup.array().of(
+                      Yup.number()
+                          .required("Price is required.")
+                          .min(1, "Must be greathan 1")
+                          .integer()
+                  )
+                : Yup.number()
+                      .required("Price is required.")
+                      .min(1, "Must be greathan 1")
+                      .integer()
+        ),
+        quantity: Yup.lazy((val) =>
+            Array.isArray(val)
+                ? Yup.array().of(
+                      Yup.number()
+                          .required("Quantity is required.")
+                          .min(1, "Must be greathan 1")
+                          .integer()
+                  )
+                : Yup.number()
+                      .required("Quantity is required.")
+                      .min(1, "Must be greathan 1")
+                      .integer()
+        ),
     });
+
+    // TODO Thêm hóa đơn nhập
 
     const onSubmit = (values, formAction) => {
         dispatch(createNewInvoiceIssues(values));

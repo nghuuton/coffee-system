@@ -1,12 +1,13 @@
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { CheckOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Input, InputNumber } from "antd";
+import Search from "antd/lib/input/Search";
 import React from "react";
-import { formatMoney } from "../../utils/formatNumber";
-
+import checkImg from "../../image/check.svg";
 import removeImg from "../../image/delete.svg";
 import noteImg from "../../image/edit.svg";
-import { useSelector } from "react-redux";
-
+import { formatMoney } from "../../utils/formatNumber";
+//10-10-2020
+//28-12/2020
 const ProductInTabContent = ({
     item,
     activeKey,
@@ -14,22 +15,47 @@ const ProductInTabContent = ({
     incrementQuantity,
     decrementQuantity,
     caculatorTotal,
+    handleNote,
+    showNoteProduct,
+    handleChangeNote,
 }) => {
     return (
         <div className="tab_content__item" key={item._id}>
-            <div className="tab_content__item_btn_delete">
-                <img
-                    src={removeImg}
-                    alt="remove"
+            {!item.status && (
+                <div
+                    className="tab_content__item_btn_delete"
                     onClick={() => removeProduct(item, activeKey)}
+                >
+                    <img src={removeImg} alt="remove" />
+                </div>
+            )}
+            {item.status && (
+                <div
+                    className="tab_content__item_btn_delete"
+                    style={{ border: "none" }}
                 />
-            </div>
+            )}
             <div className="tab__content__item__title">
                 <span>{item.name}</span>
-                <span>
-                    Ghi chú <img src={noteImg} alt="note" />
-                </span>
+                {!item.noteStatus && (
+                    <span onClick={() => showNoteProduct(item)}>
+                        Ghi chú <img src={noteImg} alt="note" />
+                    </span>
+                )}
+                {item.noteStatus && (
+                    <div className="tab__content__item__title__note__input">
+                        <Search
+                            enterButton={<CheckOutlined />}
+                            onSearch={(event) => handleNote(event, item)}
+                            onChange={(event) => handleChangeNote(event, item)}
+                            value={item.note}
+                            size="small"
+                            autoFocus
+                        />
+                    </div>
+                )}
             </div>
+            {item.status && <img src={checkImg} alt="complete" style={{ width: 25 }} />}
             <div className="tab__content__item__input">
                 <Input className="input_price" value={formatMoney(item.price)} />
                 <div className="tab__content__item__input__quantity">

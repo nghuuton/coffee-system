@@ -2,6 +2,7 @@ import {
     ADD_NEW_PRODUCT,
     GET_LIST_PRODUCT,
     REMOVE_PRODUCT,
+    REMOVE_PRODUCT_SUCCESS,
     UPDATE_PRODUCT,
     UPLOAD_EXCEL_PRODUCT,
 } from "../actions/types";
@@ -29,12 +30,18 @@ export default function (state = { listProduct: [] }, action) {
         case REMOVE_PRODUCT:
             return {
                 ...state,
+                // listProduct: [
+                //     ...state.listProduct.filter((item) => item._id !== action.payload),
+                // ],
+            };
+        case REMOVE_PRODUCT_SUCCESS:
+            return {
+                ...state,
                 listProduct: [
                     ...state.listProduct.filter((item) => item._id !== action.payload),
                 ],
             };
         case UPLOAD_EXCEL_PRODUCT:
-            console.log(action.payload);
             return {
                 ...state,
                 listProduct: action.payload,

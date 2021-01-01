@@ -1,4 +1,4 @@
-import { Button, Pagination } from "antd";
+import { Button } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewTab, changeTab, getInvoice } from "../../actions/tabActions";
@@ -17,6 +17,7 @@ const Home = () => {
         if (panes && panes.length === 0) {
             dispatch(getInvoice());
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [byStatus, dispatch]);
 
     const add = async (table) => {
@@ -35,16 +36,24 @@ const Home = () => {
         setByStatus("");
     };
 
+    // eslint-disable-next-line no-unused-vars
     const [tool, setTool] = useState([
         { name: "Tất cả", function: () => getAll() },
         { name: "Bàn trống", function: () => setByStatus("Trống") },
         { name: "Chưa thanh toán", function: () => setByStatus("Chưa thanh toán") },
+        {
+            name: "Lầu 1",
+            function: () => {
+                dispatch(getListTable({ skip: 0, limit: 10 }));
+            },
+        },
+        {
+            name: "Lầu 2",
+            function: () => {
+                dispatch(getListTable({ skip: 10, limit: 10 }));
+            },
+        },
     ]);
-
-    const changePage = (page) => {
-        console.log(page);
-    };
-
     return (
         <>
             <div className="btn_filter_group">

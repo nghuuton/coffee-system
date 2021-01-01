@@ -29,6 +29,7 @@ const AdminStore = () => {
     const [visible, setVisible] = useState(false);
 
     const showModal = (type, id) => {
+        message.destroy();
         setTypeModel(type);
         if (type === "Cập nhật nhà cung cấp") {
             const sup = listSupplier.find((item) => item._id === id);
@@ -45,7 +46,10 @@ const AdminStore = () => {
         setVisible(false);
     };
 
+    // TODO Xóa hàng hóa
+
     const deleteComodity = (id) => {
+        message.destroy();
         const com = listComodity.find((item) => item._id === id);
         if (com.quantity > 0) {
             return message.error({
@@ -73,7 +77,10 @@ const AdminStore = () => {
         dispatch(removeComodity(id));
     };
 
+    // TODO Xóa nhà cung cấp
+
     const removeSup = (id) => {
+        message.destroy();
         const invoiceIssues = listInvoiceIssues.find(
             (item) => item.bySupplier._id === id
         );
@@ -90,14 +97,26 @@ const AdminStore = () => {
         dispatch(removeSuppl(id));
     };
 
+    // TODO Nhập kho
+
     const importStoreInvoice = (id) => {
+        message.destroy();
         dispatch(importStore(id));
+        message.success({
+            content: "Nhập kho thành công",
+            style: {
+                position: "relative",
+                top: 10,
+                right: "-76vh",
+            },
+        });
     };
 
     useEffect(() => {
         dispatch(getListComodity());
         dispatch(getListSupplier());
         dispatch(getListInvoiceIssues());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const staffId = accountDetail.staff._id;
@@ -121,11 +140,22 @@ const AdminStore = () => {
                         setVisible={setVisible}
                     />
                 ) : typeModel === "Cập nhật nhà cung cấp" ? (
-                    <FormSupplierEdit supplier={supplier} setVisible={setVisible} />
+                    <FormSupplierEdit
+                        supplier={supplier}
+                        setVisible={setVisible}
+                        listSupplier={listSupplier}
+                    />
                 ) : typeModel === "Cập nhật hàng hoá" ? (
-                    <FormComodityEdit comodity={comodity} setVisible={setVisible} />
+                    <FormComodityEdit
+                        comodity={comodity}
+                        setVisible={setVisible}
+                        listComodity={listComodity}
+                    />
                 ) : (
-                    <FormSupplierAdd setVisible={setVisible} />
+                    <FormSupplierAdd
+                        setVisible={setVisible}
+                        listSupplier={listSupplier}
+                    />
                 )}
             </Modal>
             <div className="btn_filter_group" style={{ marginBottom: 20 }}>

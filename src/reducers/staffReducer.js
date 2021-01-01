@@ -2,6 +2,7 @@ import {
     CREATE_NEW_USER,
     GET_LIST_USER,
     REMOVE_USER,
+    UPDATE_STATUS_USER,
     UPDATE_TYPE_USER,
 } from "../actions/types";
 
@@ -29,7 +30,12 @@ export default function (state = { listStaff: [] }, action) {
         case REMOVE_USER:
             return {
                 ...state,
-                listStaff: state.listStaff.filter((item) => item._id !== action.payload),
+                listStaff: action.payload.listStaff,
+            };
+        case UPDATE_STATUS_USER:
+            return {
+                ...state,
+                listStaff: action.payload,
             };
         default:
             return state;

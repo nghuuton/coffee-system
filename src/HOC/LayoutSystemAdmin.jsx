@@ -1,13 +1,13 @@
 import {
     BarChartOutlined,
     CoffeeOutlined,
+    DollarCircleOutlined,
     InboxOutlined,
-    UngroupOutlined,
     UserOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
-import { connect } from "react-redux";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import logo from "../image/coffee-cup.svg";
 
@@ -40,10 +40,10 @@ class LayoutSystemAdmin extends Component {
                 type: [0, 1],
             },
             {
-                title: "Quản lý bàn",
-                icon: <UngroupOutlined />,
-                link: "/admin/table",
-                type: [0, 1],
+                title: "Quản lý hoá đơn",
+                icon: <DollarCircleOutlined />,
+                link: "/admin/invoice",
+                type: [0],
             },
         ],
     };

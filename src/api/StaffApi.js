@@ -17,6 +17,10 @@ const StaffApi = {
         const url = `/user/${id}`;
         return axiosClient.post(url);
     },
+    updateStatus: (id) => {
+        const url = `user/updateStatus/${id}`;
+        return axiosClient.post(url);
+    },
 };
 
 export default StaffApi;

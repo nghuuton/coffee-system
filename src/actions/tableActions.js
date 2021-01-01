@@ -19,3 +19,5 @@ export function updateStatusTable(id) {
         payload: id,
     };
 }
+
+export function changeStatus(tableId, status) {}

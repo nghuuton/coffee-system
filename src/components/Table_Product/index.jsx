@@ -1,4 +1,4 @@
-import { Button, Image, notification, Table, Tag } from "antd";
+import { Button, Image, message, notification, Table, Tag } from "antd";
 import Column from "antd/lib/table/Column";
 import React from "react";
 import { formatMoney } from "../../utils/formatNumber";
@@ -71,8 +71,9 @@ const TableProduct = ({ listProduct, typeArray, showModal, deleteProduct }) => {
                         <Button
                             type="primary"
                             danger
-                            onClick={() =>
-                                notification["error"]({
+                            onClick={() => {
+                                message.destroy();
+                                return notification["error"]({
                                     key: `${_id}`,
                                     message: "Bạn có đồng ý xoá món ăn này",
                                     btn: (
@@ -87,8 +88,8 @@ const TableProduct = ({ listProduct, typeArray, showModal, deleteProduct }) => {
                                             Xác nhận
                                         </Button>
                                     ),
-                                })
-                            }
+                                });
+                            }}
                         >
                             Xoá
                         </Button>

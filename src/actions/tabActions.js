@@ -3,13 +3,17 @@ import {
     ADD_NEW_TAB,
     ADD_PRODUCT,
     CHANGE_TAB_TABLE,
+    CLEAR_NOTE_PRODUCT,
     DECREMENT_PRODUCT,
     DELETE_PRODUCT,
+    ENABLE_STATUS_NOTE,
     GET_INVOICE_NOT_PAYMENT,
     INCREMENT_PRODUCT,
+    NOTE_PRODUCT,
     REMOVE_TAB,
     REQUIREMENT_PAYMENT,
     UPDATE_STATUS_KITCHEN_TAB,
+    UPDATE_STATUS_PRODUCT,
 } from "./types";
 
 export function addNewTab(name, table, data) {
@@ -100,10 +104,10 @@ export function getInvoice() {
     };
 }
 
-export function requirePayment(tableId, moneyPay, payment, userId) {
+export function requirePayment(tableId, moneyPay, payment, userId, percent) {
     return {
         type: REQUIREMENT_PAYMENT,
-        payload: { tableId, moneyPay, payment, userId },
+        payload: { tableId, moneyPay, payment, userId, percent },
     };
 }
 
@@ -111,5 +115,33 @@ export function updateStatusKitchenTab(paneId) {
     return {
         type: UPDATE_STATUS_KITCHEN_TAB,
         payload: paneId,
+    };
+}
+
+export function enableStatusNoteProduct(item, tableId) {
+    return {
+        type: ENABLE_STATUS_NOTE,
+        payload: { product: item, tableId },
+    };
+}
+
+export function noteProduct(item, tableId) {
+    return {
+        type: NOTE_PRODUCT,
+        payload: { product: item, tableId },
+    };
+}
+
+export function updateStatusProduct(tableId) {
+    return {
+        type: UPDATE_STATUS_PRODUCT,
+        payload: tableId,
+    };
+}
+
+export function clearNoteProduct(tableId) {
+    return {
+        type: CLEAR_NOTE_PRODUCT,
+        payload: tableId,
     };
 }

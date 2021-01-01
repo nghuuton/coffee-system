@@ -1,4 +1,4 @@
-import { Button, notification, Table, Tag } from "antd";
+import { Button, message, notification, Table, Tag } from "antd";
 import Column from "antd/lib/table/Column";
 import React, { useState } from "react";
 import moment from "moment";
@@ -7,7 +7,7 @@ import { Select } from "antd";
 
 const { Option } = Select;
 
-const TableUser = ({ listStaff, updateType, removeUser }) => {
+const TableUser = ({ listStaff, updateType, removeUser, updateStatus }) => {
     const [type, setType] = useState("");
 
     const handleChange = (value) => {
@@ -46,6 +46,24 @@ const TableUser = ({ listStaff, updateType, removeUser }) => {
                 render={(account) => <span>{account.email}</span>}
             />
             <Column
+                title="Trạng thái"
+                dataIndex="account"
+                key="email"
+                render={(account) =>
+                    account.status === 0 ? (
+                        <Tag color="green">Kích hoạt</Tag>
+                    ) : (
+                        <Tag
+                            color="red"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => updateStatus(account._id)}
+                        >
+                            Vô hiệu hoá
+                        </Tag>
+                    )
+                }
+            />
+            <Column
                 title="Chức vụ"
                 dataIndex="account"
                 key="email"
@@ -71,8 +89,13 @@ const TableUser = ({ listStaff, updateType, removeUser }) => {
                         <Button
                             type="primary"
                             danger
-                            onClick={() =>
-                                notification["error"]({
+                            disabled={
+                                listStaff.find((item) => item._id === _id).account
+                                    .status === 1
+                            }
+                            onClick={() => {
+                                message.destroy();
+                                return notification["error"]({
                                     key: `${_id}`,
                                     message: "Bạn có đồng ý xoá loại này",
                                     btn: (
@@ -87,8 +110,8 @@ const TableUser = ({ listStaff, updateType, removeUser }) => {
                                             Xác nhận
                                         </Button>
                                     ),
-                                })
-                            }
+                                });
+                            }}
                         >
                             Xoá
                         </Button>

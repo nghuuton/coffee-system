@@ -7,17 +7,39 @@ import { getListProduct } from "../../actions/productAction";
 import { addNewType, updateType } from "../../actions/typeAction";
 import { AntInput } from "../../customField/CreateAntField";
 
-const FormTypeEdit = ({ typeCurrent, setTypeCurrent }) => {
+const FormTypeEdit = ({ typeCurrent, setTypeCurrent, listType }) => {
     const [form] = AntForm.useForm();
     const dispatch = useDispatch();
     const initialValues = typeCurrent;
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required("Name is required."),
+        name: Yup.string()
+            .required("Tên không được bỏ trống.")
+            .matches(
+                /^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$/,
+                "Không được có số."
+            ),
     });
+
+    // TODO Thêm, cập nhật loại món
 
     const onSubmit = (values, formAction) => {
         setTypeCurrent(null);
         if (typeCurrent.name) {
+            const newListType = listType.filter((item) => item._id !== typeCurrent._id);
+            const typeExits = newListType.find(
+                (item) => item.name.toLowerCase() === values.name.toLowerCase()
+            );
+            if (typeExits) {
+                formAction.setSubmitting(false);
+                return message.error({
+                    content: `Sản phẩm đã tồn tại`,
+                    style: {
+                        position: "relative",
+                        top: 10,
+                        right: "-80vh",
+                    },
+                });
+            }
             dispatch(updateType(typeCurrent._id, values));
             message.success({
                 content: `Cập nhật thành công`,
@@ -27,7 +49,23 @@ const FormTypeEdit = ({ typeCurrent, setTypeCurrent }) => {
                     right: "-80vh",
                 },
             });
-        } else {
+        }
+
+        if (!typeCurrent.name) {
+            const typeExits = listType.find(
+                (item) => item.name.toLowerCase() === values.name.toLowerCase()
+            );
+            if (typeExits) {
+                formAction.setSubmitting(false);
+                return message.error({
+                    content: `Sản phẩm đã tồn tại`,
+                    style: {
+                        position: "relative",
+                        top: 10,
+                        right: "-80vh",
+                    },
+                });
+            }
             dispatch(addNewType(values));
             message.success({
                 content: `Thêm thành công`,
@@ -38,6 +76,7 @@ const FormTypeEdit = ({ typeCurrent, setTypeCurrent }) => {
                 },
             });
         }
+
         dispatch(getListProduct());
         formAction.resetForm();
         formAction.setSubmitting(false);

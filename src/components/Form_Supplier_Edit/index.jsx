@@ -6,20 +6,37 @@ import * as Yup from "yup";
 import { updateSupplier } from "../../actions/supplierAction";
 import { AntInput } from "../../customField/CreateAntField";
 
-const FormSupplierEdit = ({ supplier, setVisible }) => {
+const FormSupplierEdit = ({ supplier, setVisible, listSupplier }) => {
     const [form] = AntForm.useForm();
     const dispatch = useDispatch();
     const initialValues = supplier;
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required("Name is required."),
-        address: Yup.string().required("Address is required."),
+        name: Yup.string().required("Tên nhà cung cấp không được bỏ trống."),
+        address: Yup.string().required("Địa chỉ không được bỏ trống."),
         phone: Yup.string()
-            .required("Phone is required.")
-            .min(9, "Min 9 number length.")
-            .max(9, "Not over 9 number length."),
+            .required("Số điện thoại không được bỏ trống.")
+            .min(9, "Tối thiểu 9 số.")
+            .max(9, "Tối đa 9 số."),
     });
 
+    // TODO Cập nhật nhà cung cấp
+
     const onSubmit = (values, formAction) => {
+        const newListSup = listSupplier.filter((item) => item._id !== supplier._id);
+        const supExits = newListSup.find(
+            (item) => item.name.toLowerCase() === values.name.toLowerCase()
+        );
+        if (supExits) {
+            formAction.setSubmitting(false);
+            return message.error({
+                content: "Nhà cung cấp đã tồn tại",
+                style: {
+                    position: "relative",
+                    top: 10,
+                    right: "-80vh",
+                },
+            });
+        }
         dispatch(updateSupplier(supplier._id, values));
         message.success({
             content: `Cập nhật thành công`,

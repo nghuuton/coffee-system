@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
 import {
     changeTab,
+    clearNoteProduct,
     getInvoice,
     removeTab,
     requirePayment,
     updateStatusKitchenTab,
+    updateStatusProduct,
 } from "../../actions/tabActions";
-import { getListTable } from "../../actions/tableActions";
+import { changeStatus, getListTable } from "../../actions/tableActions";
 import TabContent from "../TabContent";
 
 const { TabPane } = Tabs;
@@ -60,11 +62,15 @@ const TabsHoaDon = () => {
         dispatch(removeTab(newPanes));
         dispatch(changeTab(newActiveKey));
     };
+
+    // TODO SOCKET.IO
+
     useEffect(() => {
         setupSocket();
         return () => {
             setSocket(null);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -83,9 +89,12 @@ const TabsHoaDon = () => {
                     data.pane.table._id,
                     data.moneyPay,
                     data.payment,
-                    data.userId
+                    data.userId,
+                    data.percent,
+                    data.intoMoney
                 )
             );
+            message.destroy();
             message.success({
                 content: `${data.pane.table.name} yêu cầu thanh toán`,
                 style: {
@@ -94,11 +103,13 @@ const TabsHoaDon = () => {
                     right: "-80vh",
                 },
             });
-            message.config({ maxCount: 1 });
         });
 
         socket.on("LISTEN_NOTIFICATION_FROM_KITCHEN", (data) => {
+            message.destroy();
+            dispatch(clearNoteProduct(data.table._id));
             dispatch(updateStatusKitchenTab(data.table._id));
+            dispatch(updateStatusProduct(data.table._id));
             message.success({
                 content: `${data.table.name} đã xong`,
                 style: {
@@ -107,10 +118,10 @@ const TabsHoaDon = () => {
                     right: "-80vh",
                 },
             });
-            message.config({ maxCount: 1 });
         });
 
         socket.on("LISTEN_FROM_THU_NGAN", (data) => {
+            message.destroy();
             message.success({
                 content: `${data.pane.table.name} thanh toán thành công`,
                 style: {
@@ -127,6 +138,19 @@ const TabsHoaDon = () => {
             dispatch(getInvoice());
             dispatch(getListTable("Tất cả"));
         });
+
+        socket.on("LISTEN_FORM_REPORT", (data) => {
+            message.destroy();
+            message.error({
+                content: `${data.item.name} của bàn ${data.table} ${data.event}`,
+                style: {
+                    position: "relative",
+                    top: 10,
+                    right: "-80vh",
+                },
+            });
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket, accountDetail]);
 
     const onChange = (activeKey) => {
@@ -137,6 +161,10 @@ const TabsHoaDon = () => {
         if (action === "remove") {
             remove(targetKey);
         }
+    };
+
+    const changeStatusTable = (tableId, status) => {
+        dispatch(changeStatus(tableId, status));
     };
 
     return (
@@ -159,7 +187,12 @@ const TabsHoaDon = () => {
                             }}
                         >
                             <div className="tab_content">
-                                <TabContent pane={pane} socket={socket} remove={remove} />
+                                <TabContent
+                                    pane={pane}
+                                    socket={socket}
+                                    remove={remove}
+                                    changeStatusTable={changeStatusTable}
+                                />
                             </div>
                         </Card>
                     </TabPane>

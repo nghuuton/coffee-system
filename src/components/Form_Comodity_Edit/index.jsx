@@ -6,14 +6,46 @@ import * as Yup from "yup";
 import { updateComodity } from "../../actions/comodityAction";
 import { AntInput } from "../../customField/CreateAntField";
 
-const FormComodityEdit = ({ comodity, setVisible }) => {
+const FormComodityEdit = ({ comodity, setVisible, listComodity }) => {
     const [form] = AntForm.useForm();
     const dispatch = useDispatch();
-    const initialValues = comodity;
+    const initialValues = {
+        ...comodity,
+        ...comodity.unit,
+    };
+    const validationSchema = Yup.object().shape({
+        name: Yup.string().required("Tên không được bỏ trống"),
+        price: Yup.number()
+            .required("Đơn giá không được bỏ trống.")
+            .integer("Phải là số")
+            .min(1000, "Phải có giá trị hơn 1000"),
+        unit: Yup.number().required("Đơn vị tính không được bỏ trống.").min(1),
+        unitMath: Yup.string()
+            .required("Đơn vị quy ước không được bỏ trống.")
+            .matches(
+                /^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$/,
+                "Không được có số."
+            ),
+    });
 
-    const validationSchema = Yup.object().shape({});
+    // TODO Cập nhật hàng hóa
 
     const onSubmit = (values, formAction) => {
+        const newListCom = listComodity.filter((item) => item._id !== comodity._id);
+        const comExits = newListCom.find(
+            (item) => item.name.toLowerCase() === values.name.toLowerCase()
+        );
+        if (comExits) {
+            formAction.setSubmitting(false);
+            return message.error({
+                content: `Hàng hoá đã tồn tại`,
+                style: {
+                    position: "relative",
+                    top: 10,
+                    right: "-80vh",
+                },
+            });
+        }
         const unitId = comodity.unit && comodity.unit._id;
         dispatch(updateComodity({ ...values, unitId }, comodity._id));
         message.success({
@@ -51,21 +83,21 @@ const FormComodityEdit = ({ comodity, setVisible }) => {
                             <FastField
                                 name="price"
                                 label="Đơn giá"
-                                type="text"
+                                type="number"
                                 placeholder="Nhập đơn giá"
                                 hasFeedback={true}
                                 component={AntInput}
                             />
                             <FastField
-                                name="unit.unit"
+                                name="unit"
                                 label="Đơn vị quy ước"
                                 type="number"
-                                placeholder="Nhập đơn vị tính"
+                                placeholder="Nhập đơn vị quy ước"
                                 hasFeedback={true}
                                 component={AntInput}
                             />
                             <FastField
-                                name="unit.unitMath"
+                                name="unitMath"
                                 label="Đơn vị tính"
                                 type="text"
                                 placeholder="Nhập đơn vị tính"

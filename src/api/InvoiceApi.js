@@ -9,6 +9,14 @@ const InvoiceApi = {
         const url = "/invoice/getChart";
         return axiosClient.post(url, data);
     },
+    getListInvoice: () => {
+        const url = "/invoice";
+        return axiosClient.get(url);
+    },
+    removeinvoice: (id) => {
+        const url = `/invoice/${id}`;
+        return axiosClient.post(url);
+    },
 };
 
 export default InvoiceApi;

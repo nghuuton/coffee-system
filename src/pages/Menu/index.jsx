@@ -21,10 +21,11 @@ const Menu = () => {
         if (activeKey && duplicate) {
             return dispatch(incrementProduct(product, activeKey));
         } else if (activeKey) {
-            dispatch(addProduct(product, activeKey));
+            dispatch(addProduct({ ...product, noteStatus: false }, activeKey));
         }
     };
 
+    // eslint-disable-next-line no-unused-vars
     const [tool, setTool] = useState([{ name: "Bánh" }, { name: "Nước" }]);
 
     return (

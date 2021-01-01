@@ -2,20 +2,28 @@ import {
     ADD_NEW_TAB,
     ADD_PRODUCT,
     CHANGE_TAB_TABLE,
+    CLEAR_NOTE_PRODUCT,
     DECREMENT_PRODUCT,
     DELETE_PRODUCT,
+    ENABLE_STATUS_NOTE,
     GET_INVOICE_NOT_PAYMENT,
     INCREMENT_PRODUCT,
+    NOTE_PRODUCT,
     REMOVE_TAB,
     REQUIREMENT_PAYMENT,
     UPDATE_STATUS_KITCHEN_TAB,
+    UPDATE_STATUS_PRODUCT,
 } from "../actions/types";
+import { generatorListInvoice } from "../utils/helpers";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (state = { panes: [] }, action) {
     switch (action.type) {
         case ADD_NEW_TAB:
-            return { ...state, panes: [{ ...action.payload, statusKitchen: true }] };
+            return {
+                ...state,
+                panes: [...state.panes, { ...action.payload, statusKitchen: true }],
+            };
         case REMOVE_TAB:
             return { ...state, panes: action.payload };
         case CHANGE_TAB_TABLE:
@@ -36,7 +44,7 @@ export default function (state = { panes: [] }, action) {
                         statusKitchen: false,
                         content: [
                             ...result.content,
-                            { ...action.payload.product, quantity: 1 },
+                            { ...action.payload.product, quantity: 1, status: false },
                         ],
                     },
                     ...state.panes.slice(idx + 1),
@@ -51,7 +59,11 @@ export default function (state = { panes: [] }, action) {
             );
             const newContent = [
                 ...pane.content.slice(0, indexProduct),
-                { ...product, quantity: pane.content[indexProduct].quantity + 1 },
+                {
+                    ...product,
+                    quantity: pane.content[indexProduct].quantity + 1,
+                    status: false,
+                },
                 ...pane.content.slice(indexProduct + 1),
             ];
 
@@ -84,52 +96,30 @@ export default function (state = { panes: [] }, action) {
                     {
                         ...paneObj,
                         content: [...newContentResult],
+                        statusKitchen: false,
                     },
                     ...state.panes.slice(idxPane + 1),
                 ],
             };
         case DELETE_PRODUCT:
-            const { activeKey: activePaneKey, product: productRemove } = action.payload;
-            const paneOfProduct = state.panes.find(
-                (item) => item.table._id === activePaneKey
-            );
-            const idxPaneProduct = state.panes.indexOf(paneOfProduct);
-            const newContentOfPane = paneOfProduct.content.filter(
-                (item) => item._id !== productRemove._id
-            );
             return {
                 ...state,
-                panes: [
-                    ...state.panes.slice(0, idxPaneProduct),
-                    { ...paneOfProduct, content: [...newContentOfPane] },
-                    ...state.panes.slice(idxPaneProduct + 1),
-                ],
+                panes: state.panes.map((item) =>
+                    item.table._id === action.payload.activeKey
+                        ? {
+                              ...item,
+                              content: item.content.filter(
+                                  (p) => p._id !== action.payload.product._id
+                              ),
+                              statusKitchen: false,
+                          }
+                        : item
+                ),
             };
         // * Danh sách hoá đơn chưa trả
         case GET_INVOICE_NOT_PAYMENT:
             const { invoice, detailInvoice } = action.payload;
-            let newPanes = [];
-            if (invoice.length !== 0) {
-                newPanes = invoice.map((item, index) => {
-                    return {
-                        title: item.ownerTable.name,
-                        content:
-                            item.detailInvoice._id === detailInvoice[index]._id
-                                ? detailInvoice[index].product.map((item) => {
-                                      return {
-                                          quantity: item.quantity,
-                                          ...item._id,
-                                          note: "",
-                                      };
-                                  })
-                                : [],
-                        table: item.ownerTable,
-                        totalPayment: detailInvoice[index].totalPayment,
-                        intoMoney: detailInvoice[index].intoMoney,
-                        percent: item.percent,
-                    };
-                });
-            }
+            const newPanes = generatorListInvoice(invoice, detailInvoice);
             return {
                 ...state,
                 panes: newPanes,
@@ -158,7 +148,67 @@ export default function (state = { panes: [] }, action) {
                 panes: state.panes.map((item) =>
                     item.table._id === action.payload
                         ? { ...item, statusKitchen: true }
-                        : { ...item }
+                        : item
+                ),
+            };
+        case ENABLE_STATUS_NOTE:
+            return {
+                ...state,
+                panes: state.panes.map((item) =>
+                    item.table._id === action.payload.tableId
+                        ? {
+                              ...item,
+                              content: item.content.map((p) =>
+                                  p._id === action.payload.product._id
+                                      ? { ...action.payload.product }
+                                      : { ...p }
+                              ),
+                          }
+                        : item
+                ),
+            };
+        case NOTE_PRODUCT:
+            return {
+                ...state,
+                panes: state.panes.map((item) =>
+                    item.table._id === action.payload.tableId
+                        ? {
+                              ...item,
+                              content: item.content.map((p) =>
+                                  p._id === action.payload.product._id
+                                      ? { ...action.payload.product }
+                                      : { ...p }
+                              ),
+                          }
+                        : item
+                ),
+            };
+        case UPDATE_STATUS_PRODUCT:
+            return {
+                ...state,
+                panes: state.panes.map((item) =>
+                    item.table._id === action.payload
+                        ? {
+                              ...item,
+                              content: item.content.map((item) => {
+                                  return { ...item, status: true };
+                              }),
+                          }
+                        : item
+                ),
+            };
+        case CLEAR_NOTE_PRODUCT:
+            return {
+                ...state,
+                panes: state.panes.map((item) =>
+                    item.table._id === action.payload
+                        ? {
+                              ...item,
+                              content: item.content.map((p) => {
+                                  return { ...p, note: "" };
+                              }),
+                          }
+                        : item
                 ),
             };
         default:

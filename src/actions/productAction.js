@@ -3,6 +3,7 @@ import {
     ADD_NEW_PRODUCT,
     GET_LIST_PRODUCT,
     REMOVE_PRODUCT,
+    REMOVE_PRODUCT_SUCCESS,
     UPDATE_PRODUCT,
     UPLOAD_EXCEL_PRODUCT,
 } from "./types";
@@ -35,7 +36,7 @@ export function removeProduct(id) {
     const request = ProductApi.removeProduct(id);
     return {
         type: REMOVE_PRODUCT,
-        payload: id,
+        payload: request,
     };
 }
 
@@ -44,5 +45,14 @@ export function uploadExcel(values) {
     return {
         type: UPLOAD_EXCEL_PRODUCT,
         payload: request,
+    };
+}
+
+export function removeProductSuccess(id) {
+    // eslint-disable-next-line no-unused-vars
+    const request = ProductApi.removeProduct(id);
+    return {
+        type: REMOVE_PRODUCT_SUCCESS,
+        payload: id,
     };
 }

@@ -3,7 +3,11 @@ import Modal from "antd/lib/modal/Modal";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getListComodity } from "../../actions/comodityAction";
-import { getListProduct, removeProduct } from "../../actions/productAction";
+import {
+    getListProduct,
+    removeProduct,
+    removeProductSuccess,
+} from "../../actions/productAction";
 import { getList, removeType } from "../../actions/typeAction";
 import FormProductAdd from "../../components/Form_Product_Add";
 import FormProductEdit from "../../components/Form_Product_Edit";
@@ -35,6 +39,7 @@ const AdminMenu = () => {
     const [typeCurrent, setTypeCurrent] = useState();
 
     const showModal = (type, id) => {
+        message.destroy();
         setTypeModel(type);
         if (type === "Cập nhật") {
             const result = listProduct.find((item) => item._id === id);
@@ -69,7 +74,10 @@ const AdminMenu = () => {
         return () => {
             setProduct("");
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
+
+    // TODO Xóa loại món
 
     const deleteType = (id) => {
         const result = listProduct.find((item) => item.type._id === id);
@@ -86,15 +94,31 @@ const AdminMenu = () => {
         dispatch(removeType(id));
     };
 
+    // TODO Xóa Món
+
     const deleteProduct = (id) => {
-        dispatch(removeProduct(id));
-        return message.success({
-            content: "Xoá thành công",
-            style: {
-                position: "relative",
-                top: 10,
-                right: "-76vh",
-            },
+        dispatch(removeProduct(id)).then((res) => {
+            if (res.payload.success === false) {
+                return message.error({
+                    content: "Không thể xoá trong hoá đơn còn sản phẩm",
+                    style: {
+                        position: "relative",
+                        top: 10,
+                        right: "-76vh",
+                    },
+                });
+            }
+            if (res.payload.success === true) {
+                dispatch(removeProductSuccess(id));
+                return message.success({
+                    content: "Xoá thành công",
+                    style: {
+                        position: "relative",
+                        top: 10,
+                        right: "-76vh",
+                    },
+                });
+            }
         });
     };
 
@@ -117,6 +141,7 @@ const AdminMenu = () => {
                         product={product}
                         listComodity={listComodity}
                         setVisible={setVisible}
+                        listProduct={listProduct}
                     />
                 ) : (
                     <FormProductAdd
@@ -124,6 +149,7 @@ const AdminMenu = () => {
                         typeModel={typeModel}
                         listComodity={listComodity}
                         setVisible={setVisible}
+                        listProduct={listProduct}
                     />
                 )}
             </Modal>
@@ -141,11 +167,13 @@ const AdminMenu = () => {
                 />
                 {typeCurrent ? (
                     <FormTypeEdit
+                        listType={listType}
                         typeCurrent={typeCurrent}
                         setTypeCurrent={setTypeCurrent}
                     />
                 ) : (
                     <FormTypeEdit
+                        listType={listType}
                         typeCurrent={{ name: "" }}
                         setTypeCurrent={setTypeCurrent}
                     />
